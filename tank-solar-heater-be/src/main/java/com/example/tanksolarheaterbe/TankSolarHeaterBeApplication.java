@@ -1,13 +1,13 @@
-package com.example.tanksolarheater;
+package com.example.tanksolarheaterbe;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TankSolarHeaterApplication {
+public class TankSolarHeaterBeApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(TankSolarHeaterApplication.class, args);
+        SpringApplication.run(TankSolarHeaterBeApplication.class, args);
     }
 
 }
