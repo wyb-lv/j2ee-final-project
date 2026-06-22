@@ -1,0 +1,85 @@
+<!-- ===== Page hero ===== -->
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow eyebrow--light">About SunTank</span>
+    <h1 class="fade-up">We make hot water the smart way</h1>
+    <p class="fade-up">
+      SunTank designs, builds and installs solar water heaters and high-efficiency storage tanks
+      that keep homes warm while keeping bills — and emissions — low.
+    </p>
+  </div>
+</section>
+
+<!-- ===== Stats ===== -->
+<section class="stats">
+  <div class="container stats__grid">
+    @for (s of stats; track s.label) {
+      <div class="stat">
+        <strong>{{ s.value }}</strong>
+        <span>{{ s.label }}</span>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ===== Story / mission ===== -->
+<section class="section">
+  <div class="container split">
+    <div class="split__media">
+      <img
+        src="https://images.unsplash.com/photo-1558449028-b53a39d100fc?auto=format&fit=crop&w=1200&q=80"
+        alt="Solar collectors on a rooftop"
+        loading="lazy"
+      />
+    </div>
+    <div class="split__copy">
+      <span class="eyebrow">Our mission</span>
+      <h2>Endless hot water shouldn't cost the earth</h2>
+      <p>
+        We started SunTank in a garage in 2009 with a simple frustration: water heating was
+        wasteful, ugly and expensive. So we engineered systems that put the sun to work first,
+        backed by smart storage tanks for the moments it can't.
+      </p>
+      <p>
+        Today we've fitted more than twelve thousand homes with solar collectors, storage tanks
+        and heat-pump hybrids — each one quietly cutting energy use without anyone giving up a
+        single hot shower.
+      </p>
+      <a routerLink="/shop" class="btn btn--dark">See our systems</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Values ===== -->
+<section class="section section--alt">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">What we stand for</span>
+      <h2>The values behind every install</h2>
+    </div>
+    <div class="values">
+      @for (v of values; track v.title) {
+        <div class="value">
+          <span class="value__ic">{{ v.icon }}</span>
+          <h3>{{ v.title }}</h3>
+          <p>{{ v.text }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===== Banner ===== -->
+<section class="section">
+  <div class="container about-banner">
+    <h2>Heating you can feel good about</h2>
+    <p>
+      Solar, tank and hybrid systems — sized for your home, installed by people who care,
+      and built to keep saving for a decade or more.
+    </p>
+    <div class="about-banner__btns">
+      <a routerLink="/shop" class="btn btn--primary">Shop Heaters</a>
+      <a routerLink="/faq" class="btn btn--ghost">Read the FAQ</a>
+    </div>
+  </div>
+</section>

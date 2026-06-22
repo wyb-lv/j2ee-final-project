@@ -1,0 +1,144 @@
+<!-- ===== Hero ===== -->
+<section class="hero">
+  <div class="hero__bg"></div>
+  <div class="hero__overlay"></div>
+  <div class="container hero__content">
+    <span class="hero__tag fade-up">Solar &amp; Tank Water Heating</span>
+    <h1 class="hero__title fade-up">Endless Hot Water,<br /><em>Powered by the Sun</em></h1>
+    <p class="hero__sub fade-up">
+      High-efficiency solar collectors and smart storage tanks that deliver hot water on demand —
+      while cutting your energy bill and your carbon footprint.
+    </p>
+    <div class="hero__btns fade-up">
+      <a routerLink="/shop" class="btn btn--primary">Shop Heaters</a>
+      <a routerLink="/about" class="btn btn--light">Why SunTank</a>
+    </div>
+    <div class="hero__stats fade-up">
+      <div><strong>70%</strong><span>Lower energy bills</span></div>
+      <div><strong>12k+</strong><span>Homes heated</span></div>
+      <div><strong>10yr</strong><span>Warranty</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Feature strip ===== -->
+<section class="features">
+  <div class="container features__grid">
+    @for (f of features; track f.title) {
+      <div class="feature">
+        <span class="feature__icon">{{ f.icon }}</span>
+        <div>
+          <h3>{{ f.title }}</h3>
+          <p>{{ f.text }}</p>
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ===== Featured products (live from backend) ===== -->
+<section class="section">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">Best Sellers</span>
+      <h2>Heaters our customers love</h2>
+      <p>Hand-picked solar and tank systems, pulled live from our catalog.</p>
+    </div>
+
+    @if (loading()) {
+      <div class="grid">
+        @for (s of [1,2,3,4]; track s) {
+          <div class="skeleton"></div>
+        }
+      </div>
+    } @else if (failed()) {
+      <div class="notice">
+        <strong>Couldn't reach the catalog service.</strong>
+        <p>Make sure the backend (tank-solar-heater-be) is running on <code>localhost:8080</code>.</p>
+      </div>
+    } @else if (featured().length === 0) {
+      <div class="notice">
+        <strong>No products yet.</strong>
+        <p>Add some products in the backend and they'll appear here automatically.</p>
+      </div>
+    } @else {
+      <div class="grid">
+        @for (p of featured(); track p.id) {
+          <app-product-card [product]="p" />
+        }
+      </div>
+    }
+
+    <div class="section__cta">
+      <a routerLink="/shop" class="btn btn--ghost">View all products</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Solar vs Tank ===== -->
+<section class="section section--alt">
+  <div class="container compare">
+    <div class="compare__copy">
+      <span class="eyebrow">Two ways to heat</span>
+      <h2>Solar collectors or storage tanks — or both</h2>
+      <p>
+        Not sure which system fits your home? We build both, and a hybrid that pairs a solar
+        collector with a smart storage tank for hot water around the clock.
+      </p>
+      <ul class="ticks">
+        <li>Roof-mounted evacuated-tube &amp; flat-plate solar collectors</li>
+        <li>Insulated stainless storage tanks, 100L–500L</li>
+        <li>Heat-pump hybrids for cloudy climates</li>
+        <li>Smart controllers with app monitoring</li>
+      </ul>
+      <a routerLink="/shop" class="btn btn--dark">Explore systems</a>
+    </div>
+    <div class="compare__cards">
+      <div class="mini">
+        <span class="mini__ic">☀</span>
+        <h3>Solar Water Heaters</h3>
+        <p>Free energy from the sun. Lowest running cost, best for sunny regions.</p>
+      </div>
+      <div class="mini">
+        <span class="mini__ic">🛢</span>
+        <h3>Storage Tank Heaters</h3>
+        <p>Reliable, high-capacity hot water on demand for the whole household.</p>
+      </div>
+      <div class="mini">
+        <span class="mini__ic">♻</span>
+        <h3>Heat-Pump Hybrids</h3>
+        <p>Up to 4× more efficient than electric, even on cloudy days.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== How it works ===== -->
+<section class="section">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">How it works</span>
+      <h2>Hot water in three simple steps</h2>
+    </div>
+    <div class="steps">
+      @for (s of steps; track s.n) {
+        <div class="step">
+          <span class="step__n">{{ s.n }}</span>
+          <h3>{{ s.title }}</h3>
+          <p>{{ s.text }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA banner ===== -->
+<section class="cta">
+  <div class="container cta__inner">
+    <div>
+      <h2>Ready to stop paying for cold mornings?</h2>
+      <p>Get a system sized for your home, installed by certified technicians.</p>
+    </div>
+    <a routerLink="/shop" class="btn btn--primary">Shop Now</a>
+  </div>
+</section>

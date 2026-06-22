@@ -1,0 +1,39 @@
+<!-- ===== Hero ===== -->
+<section class="faq-hero">
+  <div class="container">
+    <span class="eyebrow eyebrow--light">Help Center</span>
+    <h1>Frequently asked questions</h1>
+    <p>Everything you need to know about our solar and tank water heaters.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container faq-layout">
+    <!-- Accordion -->
+    <div class="faq-list">
+      @for (item of items; track item.q; let i = $index) {
+        <div class="faq-item" [class.open]="open() === i">
+          <button class="faq-q" (click)="toggle(i)" type="button" [attr.aria-expanded]="open() === i">
+            <span class="faq-q__group">{{ item.group }}</span>
+            <span class="faq-q__text">{{ item.q }}</span>
+            <span class="faq-q__icon" aria-hidden="true">{{ open() === i ? '−' : '+' }}</span>
+          </button>
+          <div class="faq-a" [style.maxHeight]="open() === i ? '460px' : '0'">
+            <p>{{ item.a }}</p>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Side help card -->
+    <aside class="faq-aside">
+      <div class="help-card">
+        <span class="help-card__ic">💬</span>
+        <h3>Still have questions?</h3>
+        <p>Our heating specialists are happy to help you choose the right system for your home.</p>
+        <a href="mailto:hello@suntank.example" class="btn btn--dark">Email us</a>
+        <a routerLink="/shop" class="btn btn--ghost">Browse heaters</a>
+      </div>
+    </aside>
+  </div>
+</section>

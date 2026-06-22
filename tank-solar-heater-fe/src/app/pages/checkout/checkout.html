@@ -1,0 +1,142 @@
+<section class="co-hero">
+  <div class="container">
+    <span class="eyebrow eyebrow--light">Checkout</span>
+    <h1>Complete your order</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <!-- ===== Success state ===== -->
+    @if (result(); as res) {
+      <div class="co-success">
+        <span class="co-success__ic">✓</span>
+        <h2>Thank you, your order is placed!</h2>
+        <p>We've received order <strong>#{{ res.order.id }}</strong>. A confirmation will be sent to your email.</p>
+
+        <div class="co-receipt">
+          <div class="co-receipt__row">
+            <span>Order number</span><strong>#{{ res.order.id }}</strong>
+          </div>
+          <div class="co-receipt__row">
+            <span>Payment method</span><strong>{{ res.payment.paymentMethod }}</strong>
+          </div>
+          <div class="co-receipt__row">
+            <span>Payment status</span>
+            <strong class="co-status">{{ res.payment.paymentStatus }}</strong>
+          </div>
+          <div class="co-receipt__row co-receipt__row--total">
+            <span>Amount</span>
+            <strong>{{ res.payment.amount | currency: 'VND' : 'symbol' : '1.0-0' }}</strong>
+          </div>
+        </div>
+
+        <a routerLink="/shop" class="btn btn--primary">Continue shopping</a>
+      </div>
+    }
+
+    <!-- ===== Empty cart ===== -->
+    @else if (cart.items().length === 0) {
+      <div class="co-empty">
+        <span class="co-empty__ic">🛒</span>
+        <h2>Your cart is empty</h2>
+        <p>Add a heater to your cart before checking out.</p>
+        <a routerLink="/shop" class="btn btn--dark">Browse heaters</a>
+      </div>
+    }
+
+    <!-- ===== Checkout form ===== -->
+    @else {
+      <form class="co-grid" #f="ngForm" (ngSubmit)="placeOrder(f.valid !== false)">
+        <!-- Left: details -->
+        <div class="co-main">
+          <h3 class="co-block-title">Your details</h3>
+          <div class="co-field">
+            <label for="name">Full name</label>
+            <input id="name" name="customerName" [(ngModel)]="form.customerName" required placeholder="Nguyen Van A" />
+          </div>
+          <div class="co-row">
+            <div class="co-field">
+              <label for="email">Email</label>
+              <input id="email" type="email" name="customerEmail" [(ngModel)]="form.customerEmail" required email placeholder="you@email.com" />
+            </div>
+            <div class="co-field">
+              <label for="phone">Phone</label>
+              <input id="phone" name="customerPhone" [(ngModel)]="form.customerPhone" placeholder="09xx xxx xxx" />
+            </div>
+          </div>
+          <div class="co-field">
+            <label for="address">Delivery address</label>
+            <textarea id="address" name="customerAddress" [(ngModel)]="form.customerAddress" required rows="3" placeholder="House number, street, district, city"></textarea>
+          </div>
+
+          <h3 class="co-block-title">Payment method</h3>
+          <div class="co-methods">
+            @for (m of paymentMethods; track m.value) {
+              <label class="co-method" [class.active]="form.paymentMethod === m.value">
+                <input type="radio" name="paymentMethod" [value]="m.value" [(ngModel)]="form.paymentMethod" />
+                <span class="co-method__body">
+                  <strong>{{ m.label }}</strong>
+                  <small>{{ m.hint }}</small>
+                </span>
+              </label>
+            }
+          </div>
+
+          @if (error()) {
+            <p class="co-error">{{ error() }}</p>
+          }
+        </div>
+
+        <!-- Right: summary -->
+        <aside class="co-summary">
+          <h3 class="co-block-title">Order summary</h3>
+          <div class="co-items">
+            @for (item of cart.items(); track item.product.id) {
+              <div class="co-item">
+                <img [src]="item.product.imageUrl" [alt]="item.product.name" />
+                <div class="co-item__info">
+                  <span class="co-item__name">{{ item.product.name }}</span>
+                  <span class="co-item__qty">Qty {{ item.qty }}</span>
+                </div>
+                <span class="co-item__price">{{ cart.lineTotal(item.product, item.qty) | currency: 'VND' : 'symbol' : '1.0-0' }}</span>
+              </div>
+            }
+          </div>
+
+          @if (cart.priced(); as priced) {
+            <div class="co-breakdown">
+              <div class="co-breakdown__row">
+                <span>Subtotal</span>
+                <span>{{ priced.subtotal | currency: 'VND' : 'symbol' : '1.0-0' }}</span>
+              </div>
+              @if (priced.discountTotal > 0) {
+                <div class="co-breakdown__row co-breakdown__row--save">
+                  <span>Discount</span>
+                  <span>−{{ priced.discountTotal | currency: 'VND' : 'symbol' : '1.0-0' }}</span>
+                </div>
+              }
+            </div>
+          }
+
+          <div class="co-total">
+            <span>Total</span>
+            <strong>{{ cart.total() | currency: 'VND' : 'symbol' : '1.0-0' }}</strong>
+          </div>
+
+          @switch (cart.pricingState()) {
+            @case ('loading') { <p class="co-pricing">Validating prices with server…</p> }
+            @case ('ok') { <p class="co-pricing co-pricing--ok">✓ Prices verified by server</p> }
+            @case ('error') { <p class="co-pricing co-pricing--warn">Showing saved prices — server unavailable</p> }
+          }
+
+          <button type="submit" class="btn btn--primary co-place" [disabled]="submitting()">
+            {{ submitting() ? 'Placing order…' : 'Place order' }}
+          </button>
+          <a routerLink="/shop" class="co-back">← Continue shopping</a>
+        </aside>
+      </form>
+    }
+  </div>
+</section>

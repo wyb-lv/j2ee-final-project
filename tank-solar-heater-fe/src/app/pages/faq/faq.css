@@ -1,0 +1,109 @@
+/* ===== Hero ===== */
+.faq-hero {
+  background: linear-gradient(115deg, #0c1d3e 0%, #163d80 100%);
+  color: #fff;
+  padding: 72px 0 64px;
+  text-align: center;
+}
+.eyebrow--light { color: var(--sun-soft); }
+.faq-hero h1 { font-size: clamp(32px, 4.5vw, 52px); margin: 0 0 10px; }
+.faq-hero p { color: #d6e0f0; font-size: 18px; margin: 0; }
+
+/* ===== Layout ===== */
+.faq-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 40px;
+  align-items: start;
+}
+@media (max-width: 900px) { .faq-layout { grid-template-columns: 1fr; } }
+
+/* ===== Accordion ===== */
+.faq-list { display: flex; flex-direction: column; gap: 14px; }
+.faq-item {
+  border: 1px solid var(--gray-line);
+  border-radius: var(--radius);
+  background: #fff;
+  overflow: hidden;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.faq-item.open { border-color: var(--water-light); box-shadow: var(--shadow-sm); }
+
+.faq-q {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: 'group icon' 'text icon';
+  gap: 2px 16px;
+  align-items: center;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 22px 24px;
+  cursor: pointer;
+  font-family: var(--font);
+}
+.faq-q__group {
+  grid-area: group;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--water);
+}
+.faq-q__text {
+  grid-area: text;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.faq-q__icon {
+  grid-area: icon;
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--ink);
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--bg-alt);
+  transition: background .2s ease, color .2s ease;
+}
+.faq-item.open .faq-q__icon { background: var(--sun); color: #1a1300; }
+
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .3s ease;
+}
+.faq-a p {
+  margin: 0;
+  padding: 0 24px 24px;
+  color: var(--gray);
+  font-size: 15.5px;
+  line-height: 1.7;
+}
+
+/* ===== Side help card ===== */
+.faq-aside { position: sticky; top: 100px; }
+.help-card {
+  background: var(--sun-light);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  text-align: center;
+}
+.help-card__ic {
+  font-size: 30px;
+  display: inline-grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #fff;
+  margin-bottom: 14px;
+}
+.help-card h3 { font-size: 21px; margin: 0 0 8px; }
+.help-card p { color: #6a5a1f; font-size: 15px; margin: 0 0 22px; }
+.help-card .btn { display: flex; justify-content: center; width: 100%; }
+.help-card .btn + .btn { margin-top: 10px; }

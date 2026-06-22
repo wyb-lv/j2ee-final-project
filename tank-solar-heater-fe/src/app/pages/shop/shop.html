@@ -1,0 +1,128 @@
+<!-- ===== Page hero ===== -->
+<section class="shop-hero">
+  <div class="container">
+    <span class="eyebrow eyebrow--light">Shop</span>
+    <h1>Solar &amp; tank water heaters</h1>
+    <p>Browse our full range of solar collectors, storage tanks and hybrid systems.</p>
+  </div>
+</section>
+
+<section class="section shop">
+  <div class="container">
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <form class="search" (ngSubmit)="onSearch()">
+        <span class="search__ic">🔍</span>
+        <input
+          type="search"
+          name="keyword"
+          [(ngModel)]="keyword"
+          placeholder="Search heaters, tanks, brands…"
+          aria-label="Search products"
+        />
+        <button type="submit" class="btn btn--dark search__btn">Search</button>
+      </form>
+
+      <div class="sort">
+        <label for="sort">Sort</label>
+        <select
+          id="sort"
+          [ngModel]="sort()"
+          (ngModelChange)="onSortChange($event)"
+          name="sort"
+        >
+          @for (o of sortOptions; track o.value) {
+            <option [value]="o.value">{{ o.label }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <!-- Category chips -->
+    <div class="chips">
+      <button
+        class="chip"
+        [class.active]="selectedCategory() === null"
+        (click)="selectCategory(null)"
+        type="button"
+      >
+        All products
+      </button>
+      @for (c of categories(); track c.id) {
+        <button
+          class="chip"
+          [class.active]="selectedCategory() === c.id"
+          (click)="selectCategory(c.id)"
+          type="button"
+        >
+          {{ c.name }}
+        </button>
+      }
+    </div>
+
+    <!-- Result meta -->
+    @if (!loading() && !failed()) {
+      <div class="result-meta">
+        <span>{{ totalElements() }} product{{ totalElements() === 1 ? '' : 's' }} found</span>
+        @if (keyword || selectedCategory() !== null || sort()) {
+          <button class="link-btn" (click)="clearAll()" type="button">Clear filters</button>
+        }
+      </div>
+    }
+
+    <!-- Grid -->
+    @if (loading()) {
+      <div class="grid">
+        @for (s of [1,2,3,4,5,6,7,8]; track s) {
+          <div class="skeleton"></div>
+        }
+      </div>
+    } @else if (failed()) {
+      <div class="notice">
+        <strong>Couldn't reach the catalog service.</strong>
+        <p>Make sure the backend (tank-solar-heater-be) is running on <code>localhost:8080</code>, then try again.</p>
+        <button class="btn btn--dark" (click)="load()" type="button">Retry</button>
+      </div>
+    } @else if (products().length === 0) {
+      <div class="notice">
+        <strong>No products match your search.</strong>
+        <p>Try a different keyword or category.</p>
+        <button class="btn btn--ghost" (click)="clearAll()" type="button">Reset filters</button>
+      </div>
+    } @else {
+      <div class="grid">
+        @for (p of products(); track p.id) {
+          <app-product-card [product]="p" />
+        }
+      </div>
+    }
+
+    <!-- Pagination -->
+    @if (totalPages() > 1 && !loading() && !failed()) {
+      <nav class="pager" aria-label="Pagination">
+        <button
+          class="pager__nav"
+          (click)="goToPage(page() - 1)"
+          [disabled]="page() === 1"
+          type="button"
+        >‹ Prev</button>
+
+        @for (p of pages(); track p) {
+          <button
+            class="pager__num"
+            [class.active]="p === page()"
+            (click)="goToPage(p)"
+            type="button"
+          >{{ p }}</button>
+        }
+
+        <button
+          class="pager__nav"
+          (click)="goToPage(page() + 1)"
+          [disabled]="page() === totalPages()"
+          type="button"
+        >Next ›</button>
+      </nav>
+    }
+  </div>
+</section>

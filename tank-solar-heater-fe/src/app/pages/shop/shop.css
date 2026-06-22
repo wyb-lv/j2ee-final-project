@@ -1,0 +1,171 @@
+/* ===== Hero ===== */
+.shop-hero {
+  background: linear-gradient(115deg, #0c1d3e 0%, #163d80 100%);
+  color: #fff;
+  padding: 72px 0 64px;
+}
+.eyebrow--light { color: var(--sun-soft); }
+.shop-hero h1 { font-size: clamp(32px, 4.5vw, 52px); margin: 0 0 10px; }
+.shop-hero p { color: #d6e0f0; font-size: 18px; margin: 0; }
+
+.shop { padding-top: 48px; }
+
+/* ===== Toolbar ===== */
+.toolbar {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid var(--gray-line);
+  border-radius: 999px;
+  padding: 6px 6px 6px 18px;
+  flex: 1;
+  min-width: 280px;
+  max-width: 560px;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.search:focus-within { border-color: var(--water-light); box-shadow: 0 0 0 4px rgba(118,185,255,.18); }
+.search__ic { font-size: 15px; opacity: .6; }
+.search input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-family: var(--font);
+  font-size: 15px;
+  background: transparent;
+}
+.search__btn { padding: 12px 24px; }
+
+.sort { display: flex; align-items: center; gap: 10px; }
+.sort label { font-size: 14px; font-weight: 600; color: var(--gray); }
+.sort select {
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 11px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--gray-line);
+  background: #fff;
+  cursor: pointer;
+  outline: none;
+}
+.sort select:focus { border-color: var(--water-light); }
+
+/* ===== Chips ===== */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.chip {
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--gray-line);
+  background: #fff;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all .18s ease;
+}
+.chip:hover { border-color: var(--ink); }
+.chip.active {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+}
+
+/* ===== Result meta ===== */
+.result-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  font-size: 14px;
+  color: var(--gray);
+}
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--water);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: var(--font);
+}
+.link-btn:hover { text-decoration: underline; }
+
+/* ===== Grid ===== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 280px));
+  justify-content: center;
+  gap: 26px;
+}
+
+.skeleton {
+  height: 360px;
+  border-radius: var(--radius);
+  background: linear-gradient(100deg, #eef1f6 30%, #f7f9fc 50%, #eef1f6 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.3s infinite;
+}
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+.notice {
+  text-align: center;
+  padding: 56px 32px;
+  background: var(--bg-alt);
+  border: 1px dashed var(--gray-line);
+  border-radius: var(--radius);
+}
+.notice p { color: var(--gray); margin: 8px 0 20px; }
+.notice code { background: #fff; padding: 2px 8px; border-radius: 6px; border: 1px solid var(--gray-line); }
+
+/* ===== Pagination ===== */
+.pager {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 48px;
+  flex-wrap: wrap;
+}
+.pager__num,
+.pager__nav {
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: 14px;
+  min-width: 42px;
+  height: 42px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid var(--gray-line);
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all .18s ease;
+}
+.pager__num:hover:not(.active),
+.pager__nav:hover:not(:disabled) { border-color: var(--ink); }
+.pager__num.active {
+  background: var(--sun);
+  border-color: var(--sun);
+  color: #1a1300;
+}
+.pager__nav:disabled { opacity: .4; cursor: not-allowed; }
+
+@media (max-width: 560px) {
+  .toolbar { flex-direction: column; align-items: stretch; }
+  .sort { justify-content: space-between; }
+}

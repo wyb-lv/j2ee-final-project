@@ -34,6 +34,17 @@ public class OrderService {
         Account customer = accountRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        OrderHeader header = placeOrder(customer, request);
+        return toResponse(header);
+    }
+
+    /**
+     * Persists an order (header + details) for an already-resolved account and
+     * returns the saved header. Shared by the user-order and checkout flows.
+     */
+    @Transactional
+    public OrderHeader placeOrder(Account customer, OrderRequest request) {
+
         OrderHeader header = new OrderHeader();
         header.setDate(LocalDate.now());
         header.setStatus("PENDING");
@@ -59,7 +70,12 @@ public class OrderService {
 
         orderDetailRepository.saveAll(details);
 
-        return mapToResponse(savedHeader, details);
+        return savedHeader;
+    }
+
+    /** Maps a persisted order header to its response, loading its details. */
+    public OrderResponse toResponse(OrderHeader header) {
+        return mapToResponse(header, orderDetailRepository.findByOrderHeaderId(header.getId()));
     }
 
     public List<OrderResponse> getUserOrders(Integer customerId) {
