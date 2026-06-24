@@ -43,7 +43,6 @@ public class UserService {
         account.setName(request.getName());
         account.setEmail(request.getEmail());
         account.setPassword(passwordEncoder.encode(request.getPassword()));
-        account.setAddress(request.getAddress());
         account.setPhone(request.getPhone());
         account.setRole("customer");
         account.setEnabled(true);
@@ -63,7 +62,6 @@ public class UserService {
                 .id(account.getId())
                 .name(account.getName())
                 .email(account.getEmail())
-                .address(account.getAddress())
                 .phone(account.getPhone())
                 .role(account.getRole())
                 .enabled(account.getEnabled())
