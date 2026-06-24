@@ -1,0 +1,42 @@
+<section class="auth">
+  <div class="auth__card">
+    <a routerLink="/" class="auth__brand">
+      <span class="auth__brand-mark">☀</span>
+      <span>Sun<span>Tank</span></span>
+    </a>
+
+    <h1 class="auth__title">Create your account</h1>
+    <p class="auth__sub">Sign up to check out and track your orders.</p>
+
+    @if (error()) {
+      <p class="auth__error">{{ error() }}</p>
+    }
+
+    <form #f="ngForm" (ngSubmit)="submit(f.valid !== false)">
+      <div class="auth__field">
+        <label for="name">Full name</label>
+        <input id="name" name="name" [(ngModel)]="form.name" required placeholder="Nguyen Van A" autocomplete="name" />
+      </div>
+      <div class="auth__field">
+        <label for="email">Email</label>
+        <input id="email" type="email" name="email" [(ngModel)]="form.email" required email placeholder="you@email.com" autocomplete="email" />
+      </div>
+      <div class="auth__field">
+        <label for="password">Password</label>
+        <input id="password" type="password" name="password" [(ngModel)]="form.password" required minlength="4" placeholder="••••••••" autocomplete="new-password" />
+      </div>
+      <div class="auth__field">
+        <label for="phone">Phone</label>
+        <input id="phone" name="phone" [(ngModel)]="form.phone" placeholder="09xx xxx xxx" autocomplete="tel" />
+      </div>
+
+      <button type="submit" class="btn btn--primary auth__submit" [disabled]="submitting()">
+        {{ submitting() ? 'Creating account…' : 'Create account' }}
+      </button>
+    </form>
+
+    <p class="auth__alt">
+      Already have an account? <a routerLink="/login" [queryParams]="{ returnUrl }">Log in</a>
+    </p>
+  </div>
+</section>

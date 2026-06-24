@@ -22,6 +22,9 @@ public class OrderHeader {
     @Column(name = "status", nullable = false, length = 50)
     private String status;
 
+    @Column(name = "address")
+    private String address;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "\"customerId\"", nullable = false)
     private Account customer;

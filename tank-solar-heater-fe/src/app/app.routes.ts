@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './auth/auth.guard';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,17 @@ export const routes: Routes = [
     path: 'checkout',
     loadComponent: () => import('./pages/checkout/checkout').then((m) => m.Checkout),
     title: 'Checkout — SunTank',
+    canActivate: [authGuard],
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./pages/login/login').then((m) => m.Login),
+    title: 'Log in — SunTank',
+  },
+  {
+    path: 'register',
+    loadComponent: () => import('./pages/register/register').then((m) => m.Register),
+    title: 'Create account — SunTank',
   },
   { path: '**', redirectTo: '' },
 ];

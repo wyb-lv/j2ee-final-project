@@ -14,4 +14,7 @@ public class OrderRequest {
     private List<OrderItemRequest> items;
 
     private Integer employeeId;
+
+    /** Delivery address for this order. */
+    private String address;
 }

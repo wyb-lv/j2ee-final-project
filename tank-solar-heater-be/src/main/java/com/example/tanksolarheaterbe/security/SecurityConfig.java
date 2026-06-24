@@ -62,7 +62,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
 
-                        .requestMatchers(HttpMethod.POST, "/api/cart").permitAll()
+                        .requestMatchers("/api/cart", "/api/cart/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/checkout").permitAll()
 
                         .anyRequest().authenticated()

@@ -14,6 +14,26 @@
     </nav>
 
     <div class="site-header__actions">
+      @if (auth.isLoggedIn(); as loggedIn) {
+        <div class="user-menu">
+          <button class="user-btn" type="button" (click)="toggleUserMenu()" aria-label="Account menu">
+            <span class="user-btn__avatar">{{ auth.user()?.name?.charAt(0) }}</span>
+            <span class="user-btn__name">{{ auth.user()?.name }}</span>
+          </button>
+          @if (userMenuOpen()) {
+            <div class="user-dropdown">
+              <div class="user-dropdown__head">
+                <strong>{{ auth.user()?.name }}</strong>
+                <small>{{ auth.user()?.email }}</small>
+              </div>
+              <button type="button" class="user-dropdown__item" (click)="logout()">Log out</button>
+            </div>
+          }
+        </div>
+      } @else {
+        <a routerLink="/login" class="login-link">Log in</a>
+      }
+
       <button class="cart-btn" type="button" (click)="cart.openCart()" aria-label="Open cart">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M3 4h2l2.4 12.3a1 1 0 0 0 1 .7h8.2a1 1 0 0 0 1-.8L20.5 8H6.2"
@@ -48,7 +68,7 @@
     <button class="cart-drawer__close" type="button" (click)="cart.closeCart()" aria-label="Close cart">×</button>
   </div>
 
-  @if (cart.items().length === 0) {
+  @if (cart.lines().length === 0) {
     <div class="cart-empty">
       <span class="cart-empty__ic">🛒</span>
       <p>Your cart is empty.</p>
@@ -56,19 +76,19 @@
     </div>
   } @else {
     <div class="cart-list">
-      @for (item of cart.items(); track item.product.id) {
+      @for (line of cart.lines(); track line.productId) {
         <div class="cart-line">
-          <img [src]="item.product.imageUrl" [alt]="item.product.name" />
+          <img [src]="line.imageUrl" [alt]="line.name" />
           <div class="cart-line__info">
-            <span class="cart-line__name">{{ item.product.name }}</span>
-            <span class="cart-line__price">{{ cart.lineTotal(item.product, item.qty) | currency: 'VND' : 'symbol' : '1.0-0' }}</span>
+            <span class="cart-line__name">{{ line.name }}</span>
+            <span class="cart-line__price">{{ line.lineTotal | currency: 'VND' : 'symbol' : '1.0-0' }}</span>
             <div class="cart-line__qty">
-              <button type="button" (click)="cart.setQty(item.product.id, item.qty - 1)" aria-label="Decrease">−</button>
-              <span>{{ item.qty }}</span>
-              <button type="button" (click)="cart.setQty(item.product.id, item.qty + 1)" aria-label="Increase">+</button>
+              <button type="button" (click)="cart.setQty(line.productId, line.quantity - 1)" aria-label="Decrease">−</button>
+              <span>{{ line.quantity }}</span>
+              <button type="button" (click)="cart.setQty(line.productId, line.quantity + 1)" aria-label="Increase">+</button>
             </div>
           </div>
-          <button class="cart-line__remove" type="button" (click)="cart.remove(item.product.id)" aria-label="Remove">🗑</button>
+          <button class="cart-line__remove" type="button" (click)="cart.remove(line.productId)" aria-label="Remove">🗑</button>
         </div>
       }
     </div>
@@ -79,9 +99,8 @@
         <strong>{{ cart.total() | currency: 'VND' : 'symbol' : '1.0-0' }}</strong>
       </div>
       @switch (cart.pricingState()) {
-        @case ('loading') { <p class="cart-pricing">Validating prices…</p> }
-        @case ('ok') { <p class="cart-pricing cart-pricing--ok">✓ Prices verified</p> }
-        @case ('error') { <p class="cart-pricing cart-pricing--warn">Showing saved prices — server unavailable</p> }
+        @case ('loading') { <p class="cart-pricing">Updating…</p> }
+        @case ('error') { <p class="cart-pricing cart-pricing--warn">Cart unavailable — is the server running?</p> }
       }
       <a routerLink="/checkout" class="btn btn--primary cart-checkout" (click)="cart.closeCart()">Checkout</a>
       <button class="cart-clear" type="button" (click)="cart.clear()">Clear cart</button>

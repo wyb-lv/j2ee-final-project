@@ -50,6 +50,7 @@ public class OrderService {
         header.setStatus("PENDING");
         header.setCustomer(customer);
         header.setEmployeeId(request.getEmployeeId());
+        header.setAddress(request.getAddress());
 
         OrderHeader savedHeader = orderHeaderRepository.save(header);
 
@@ -109,6 +110,7 @@ public class OrderService {
                 .customerId(header.getCustomer().getId())
                 .date(header.getDate())
                 .status(header.getStatus())
+                .address(header.getAddress())
                 .employeeId(header.getEmployeeId())
                 .total(total)
                 .items(items)

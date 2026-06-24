@@ -1,7 +1,6 @@
 package com.example.tanksolarheaterbe.services;
 
 import com.example.tanksolarheaterbe.dto.CartLineResponse;
-import com.example.tanksolarheaterbe.dto.CartRequest;
 import com.example.tanksolarheaterbe.dto.CartResponse;
 import com.example.tanksolarheaterbe.entities.Product;
 import com.example.tanksolarheaterbe.repositories.ProductRepository;
@@ -12,11 +11,12 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Cart module. The cart lives in the browser's localStorage; this service is
- * stateless and only prices/validates a cart snapshot against current product
- * data. It never reads from or writes to a cart table in the database.
+ * Cart module. The cart (productId -> quantity) is supplied by the caller from
+ * the client cookie; this service mutates that map in place and prices it
+ * against current product data. Nothing is stored on the server.
  */
 @Service
 @RequiredArgsConstructor
@@ -26,28 +26,59 @@ public class CartService {
 
     private final ProductRepository productRepository;
 
-    public CartResponse priceCart(CartRequest request) {
+    public CartResponse getCart(Map<Integer, Integer> items) {
+        return build(items);
+    }
+
+    public CartResponse addItem(Map<Integer, Integer> items, Integer productId, int quantity) {
+        productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found: " + productId));
+        items.merge(productId, quantity, Integer::sum);
+        if (items.getOrDefault(productId, 0) <= 0) {
+            items.remove(productId);
+        }
+        return build(items);
+    }
+
+    public CartResponse setItem(Map<Integer, Integer> items, Integer productId, int quantity) {
+        if (quantity <= 0) {
+            items.remove(productId);
+        } else {
+            items.put(productId, quantity);
+        }
+        return build(items);
+    }
+
+    public CartResponse removeItem(Map<Integer, Integer> items, Integer productId) {
+        items.remove(productId);
+        return build(items);
+    }
+
+    /** Builds a priced response from the given cart map. */
+    private CartResponse build(Map<Integer, Integer> items) {
 
         List<CartLineResponse> lines = new ArrayList<>();
         BigDecimal subtotal = BigDecimal.ZERO;
         BigDecimal total = BigDecimal.ZERO;
         int itemCount = 0;
 
-        for (var item : request.getItems()) {
-            Product product = productRepository.findById(item.getProductId())
-                    .orElseThrow(() -> new RuntimeException("Product not found: " + item.getProductId()));
+        for (Map.Entry<Integer, Integer> entry : items.entrySet()) {
+            Product product = productRepository.findById(entry.getKey()).orElse(null);
+            if (product == null) {
+                continue; // product was removed from the catalog; skip it
+            }
+            int qty = entry.getValue();
 
             BigDecimal discount = product.getDiscount() != null ? product.getDiscount() : BigDecimal.ZERO;
             BigDecimal factor = BigDecimal.ONE.subtract(discount.divide(HUNDRED, 4, RoundingMode.HALF_UP));
             BigDecimal finalPrice = product.getPrice().multiply(factor).setScale(2, RoundingMode.HALF_UP);
 
-            BigDecimal qty = BigDecimal.valueOf(item.getQuantity());
-            BigDecimal lineTotal = finalPrice.multiply(qty);
-            BigDecimal lineSubtotal = product.getPrice().multiply(qty);
+            BigDecimal q = BigDecimal.valueOf(qty);
+            BigDecimal lineTotal = finalPrice.multiply(q);
 
-            subtotal = subtotal.add(lineSubtotal);
+            subtotal = subtotal.add(product.getPrice().multiply(q));
             total = total.add(lineTotal);
-            itemCount += item.getQuantity();
+            itemCount += qty;
 
             lines.add(CartLineResponse.builder()
                     .productId(product.getId())
@@ -56,7 +87,7 @@ public class CartService {
                     .price(product.getPrice())
                     .discount(discount)
                     .finalPrice(finalPrice)
-                    .quantity(item.getQuantity())
+                    .quantity(qty)
                     .lineTotal(lineTotal)
                     .build());
         }

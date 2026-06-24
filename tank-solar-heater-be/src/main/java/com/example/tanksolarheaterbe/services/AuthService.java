@@ -25,7 +25,6 @@ public class AuthService {
         account.setName(request.getName());
         account.setEmail(request.getEmail());
         account.setPassword(passwordEncoder.encode(request.getPassword()));
-        account.setAddress(request.getAddress());
         account.setPhone(request.getPhone());
         account.setRole("customer");
         account.setEnabled(true);
@@ -36,7 +35,6 @@ public class AuthService {
                 .id(saved.getId())
                 .name(saved.getName())
                 .email(saved.getEmail())
-                .address(saved.getAddress())
                 .phone(saved.getPhone())
                 .role(saved.getRole())
                 .enabled(saved.getEnabled())

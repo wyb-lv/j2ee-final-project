@@ -2,7 +2,7 @@ package com.example.tanksolarheaterbe.controllers;
 
 import com.example.tanksolarheaterbe.dto.UserRequest;
 import com.example.tanksolarheaterbe.dto.UserResponse;
-import com.example.tanksolarheaterbe.services.UserService;
+import com.example.tanksolarheaterbe.services.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,31 +14,31 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-public class UserController {
+public class AccountController {
 
-    private final UserService userService;
+    private final AccountService accountService;
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserResponse>> getAll() {
-        return ResponseEntity.ok(userService.getAll());
+        return ResponseEntity.ok(accountService.getAll());
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> getById(@PathVariable Integer id) {
-        return ResponseEntity.ok(userService.getById(id));
+        return ResponseEntity.ok(accountService.getById(id));
     }
 
     @PostMapping
     public ResponseEntity<UserResponse> create(@Valid @RequestBody UserRequest request) {
-        return ResponseEntity.ok(userService.create(request));
+        return ResponseEntity.ok(accountService.create(request));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        userService.delete(id);
+        accountService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

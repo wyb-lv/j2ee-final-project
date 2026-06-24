@@ -42,6 +42,7 @@ public class PaymentService {
 
         OrderRequest orderRequest = new OrderRequest();
         orderRequest.setItems(request.getItems());
+        orderRequest.setAddress(request.getCustomerAddress());
 
         OrderHeader header = orderService.placeOrder(customer, orderRequest);
         OrderResponse orderResponse = orderService.toResponse(header);
@@ -110,7 +111,6 @@ public class PaymentService {
         account.setEmail(request.getCustomerEmail());
         account.setName(request.getCustomerName());
         account.setPhone(request.getCustomerPhone());
-        account.setAddress(request.getCustomerAddress());
         account.setRole("customer");
         account.setEnabled(true);
         // Guest checkout: a non-usable random password (the account can reset later).

@@ -37,7 +37,7 @@
     }
 
     <!-- ===== Empty cart ===== -->
-    @else if (cart.items().length === 0) {
+    @else if (cart.lines().length === 0) {
       <div class="co-empty">
         <span class="co-empty__ic">🛒</span>
         <h2>Your cart is empty</h2>
@@ -93,19 +93,19 @@
         <aside class="co-summary">
           <h3 class="co-block-title">Order summary</h3>
           <div class="co-items">
-            @for (item of cart.items(); track item.product.id) {
+            @for (line of cart.lines(); track line.productId) {
               <div class="co-item">
-                <img [src]="item.product.imageUrl" [alt]="item.product.name" />
+                <img [src]="line.imageUrl" [alt]="line.name" />
                 <div class="co-item__info">
-                  <span class="co-item__name">{{ item.product.name }}</span>
-                  <span class="co-item__qty">Qty {{ item.qty }}</span>
+                  <span class="co-item__name">{{ line.name }}</span>
+                  <span class="co-item__qty">Qty {{ line.quantity }}</span>
                 </div>
-                <span class="co-item__price">{{ cart.lineTotal(item.product, item.qty) | currency: 'VND' : 'symbol' : '1.0-0' }}</span>
+                <span class="co-item__price">{{ line.lineTotal | currency: 'VND' : 'symbol' : '1.0-0' }}</span>
               </div>
             }
           </div>
 
-          @if (cart.priced(); as priced) {
+          @if (cart.cart(); as priced) {
             <div class="co-breakdown">
               <div class="co-breakdown__row">
                 <span>Subtotal</span>
@@ -126,9 +126,9 @@
           </div>
 
           @switch (cart.pricingState()) {
-            @case ('loading') { <p class="co-pricing">Validating prices with server…</p> }
-            @case ('ok') { <p class="co-pricing co-pricing--ok">✓ Prices verified by server</p> }
-            @case ('error') { <p class="co-pricing co-pricing--warn">Showing saved prices — server unavailable</p> }
+            @case ('loading') { <p class="co-pricing">Updating cart…</p> }
+            @case ('ok') { <p class="co-pricing co-pricing--ok">✓ Cart synced with server</p> }
+            @case ('error') { <p class="co-pricing co-pricing--warn">Cart unavailable — is the server running?</p> }
           }
 
           <button type="submit" class="btn btn--primary co-place" [disabled]="submitting()">

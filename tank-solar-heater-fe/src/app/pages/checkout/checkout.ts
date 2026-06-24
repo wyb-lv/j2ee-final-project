@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { CheckoutService } from '../../services/checkout.service';
+import { AuthService } from '../../auth/auth.service';
 import { CheckoutResponse } from '../../models/checkout.models';
 
 @Component({
@@ -15,6 +16,7 @@ import { CheckoutResponse } from '../../models/checkout.models';
 export class Checkout implements OnInit {
   protected readonly cart = inject(CartService);
   private checkoutService = inject(CheckoutService);
+  private auth = inject(AuthService);
 
   readonly submitting = signal(false);
   readonly error = signal<string | null>(null);
@@ -36,8 +38,15 @@ export class Checkout implements OnInit {
   };
 
   ngOnInit(): void {
-    // Re-price the cart server-side as soon as the checkout page loads.
-    this.cart.revalidate();
+    // Load the latest session cart from the server when the page opens.
+    this.cart.load();
+
+    // Prefill from the signed-in account (checkout is gated behind login).
+    const user = this.auth.user();
+    if (user) {
+      this.form.customerName = user.name;
+      this.form.customerEmail = user.email;
+    }
   }
 
   placeOrder(formValid: boolean): void {
@@ -46,13 +55,13 @@ export class Checkout implements OnInit {
       this.error.set('Please fill in your name, a valid email and an address.');
       return;
     }
-    if (this.cart.items().length === 0) return;
+    if (this.cart.lines().length === 0) return;
 
     this.submitting.set(true);
     this.checkoutService
       .checkout({
         ...this.form,
-        items: this.cart.items().map((i) => ({ productId: i.product.id, quantity: i.qty })),
+        items: this.cart.lines().map((l) => ({ productId: l.productId, quantity: l.quantity })),
       })
       .subscribe({
         next: (res) => {
