@@ -70,8 +70,10 @@ export class AdminService {
   }
 
   // ----- Orders -----
-  listOrders(): Observable<OrderResponse[]> {
-    return this.http.get<OrderResponse[]>(`${this.base}/orders`);
+  listOrders(excludeStatus?: OrderStatus): Observable<OrderResponse[]> {
+    let params = new HttpParams();
+    if (excludeStatus) params = params.set('excludeStatus', excludeStatus);
+    return this.http.get<OrderResponse[]>(`${this.base}/orders`, { params });
   }
   updateOrderStatus(orderId: number, status: OrderStatus): Observable<OrderResponse> {
     const params = new HttpParams().set('status', status);

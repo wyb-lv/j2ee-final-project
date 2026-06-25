@@ -81,9 +81,10 @@ public class OrderService {
     }
 
     /** All orders, newest first — for the admin orders screen. */
-    public List<OrderResponse> getAllOrders() {
+    public List<OrderResponse> getAllOrders(OrderStatus excludeStatus) {
         return orderHeaderRepository.findAll()
                 .stream()
+                .filter(o -> excludeStatus == null || o.getStatus() != excludeStatus)
                 .sorted((a, b) -> b.getId().compareTo(a.getId()))
                 .map(this::toResponse)
                 .toList();

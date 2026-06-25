@@ -21,8 +21,9 @@ public class OrderController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<OrderResponse>> getAllOrders() {
-        return ResponseEntity.ok(orderService.getAllOrders());
+    public ResponseEntity<List<OrderResponse>> getAllOrders(
+            @RequestParam(required = false) OrderStatus excludeStatus) {
+        return ResponseEntity.ok(orderService.getAllOrders(excludeStatus));
     }
 
     @PostMapping("/{userId}")

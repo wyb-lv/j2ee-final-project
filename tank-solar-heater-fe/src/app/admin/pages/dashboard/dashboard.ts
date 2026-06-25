@@ -69,7 +69,7 @@ export class AdminDashboard implements OnInit {
     this.admin.listProducts({ page: 1 }).subscribe({ next: (p) => this.productCount.set(p.totalElements) });
     this.admin.listCategories().subscribe({ next: (c) => this.categoryCount.set(c.length) });
     this.admin.listBrands().subscribe({ next: (b) => this.brandCount.set(b.length) });
-    this.admin.listOrders().subscribe({
+    this.admin.listOrders('CANCELLED').subscribe({
       next: (o) => { this.orders.set(o); this.loading.set(false); },
       error: () => this.loading.set(false),
     });
