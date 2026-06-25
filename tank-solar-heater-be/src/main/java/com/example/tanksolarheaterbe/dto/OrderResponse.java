@@ -10,6 +10,7 @@ import java.util.List;
 public record OrderResponse(
         Integer id,
         Integer customerId,
+        String customerName,
         LocalDate date,
         String status,
         String address,

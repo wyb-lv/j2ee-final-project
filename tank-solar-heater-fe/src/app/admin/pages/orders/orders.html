@@ -25,9 +25,19 @@
           @for (o of orders(); track o.id) {
             <tr>
               <td class="bold">#{{ o.id }}</td>
-              <td>#{{ o.customerId }}</td>
+              <td>{{ o.customerName }}</td>
               <td>{{ o.date }}</td>
-              <td><span class="adm-badge" [class]="'adm-badge--' + statusColor(o.status)">{{ o.status }}</span></td>
+              <td>
+                <select
+                  class="status-select"
+                  [ngModel]="o.status"
+                  [class]="'status-select--' + statusColor(o.status)"
+                  (ngModelChange)="onStatusChange(o, $event)">
+                  @for (s of statuses; track s) {
+                    <option [value]="s">{{ s }}</option>
+                  }
+                </select>
+              </td>
               <td class="addr">{{ o.address || '—' }}</td>
               <td class="num total">{{ o.total | currency: 'VND' : 'symbol' : '1.0-0' }}</td>
               <td class="r">

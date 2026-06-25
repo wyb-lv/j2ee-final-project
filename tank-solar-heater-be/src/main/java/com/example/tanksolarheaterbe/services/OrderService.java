@@ -6,6 +6,7 @@ import com.example.tanksolarheaterbe.dto.OrderResponse;
 import com.example.tanksolarheaterbe.entities.Account;
 import com.example.tanksolarheaterbe.entities.OrderDetail;
 import com.example.tanksolarheaterbe.entities.OrderHeader;
+import com.example.tanksolarheaterbe.entities.OrderStatus;
 import com.example.tanksolarheaterbe.entities.Product;
 import com.example.tanksolarheaterbe.repositories.AccountRepository;
 import com.example.tanksolarheaterbe.repositories.OrderDetailRepository;
@@ -47,7 +48,7 @@ public class OrderService {
 
         OrderHeader header = new OrderHeader();
         header.setDate(LocalDate.now());
-        header.setStatus("PENDING");
+        header.setStatus(OrderStatus.PENDING);
         header.setCustomer(customer);
         header.setEmployeeId(request.getEmployeeId());
         header.setAddress(request.getAddress());
@@ -98,6 +99,15 @@ public class OrderService {
                 .toList();
     }
 
+    @Transactional
+    public OrderResponse updateOrderStatus(Integer orderId, OrderStatus status) {
+        OrderHeader header = orderHeaderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found: " + orderId));
+        header.setStatus(status);
+        orderHeaderRepository.save(header);
+        return toResponse(header);
+    }
+
     private OrderResponse mapToResponse(OrderHeader header, List<OrderDetail> details) {
 
         BigDecimal total = details.stream()
@@ -117,8 +127,9 @@ public class OrderService {
         return OrderResponse.builder()
                 .id(header.getId())
                 .customerId(header.getCustomer().getId())
+                .customerName(header.getCustomer().getName())
                 .date(header.getDate())
-                .status(header.getStatus())
+                .status(header.getStatus().name())
                 .address(header.getAddress())
                 .employeeId(header.getEmployeeId())
                 .total(total)

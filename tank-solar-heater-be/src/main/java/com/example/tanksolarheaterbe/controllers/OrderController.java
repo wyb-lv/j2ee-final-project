@@ -2,6 +2,7 @@ package com.example.tanksolarheaterbe.controllers;
 
 import com.example.tanksolarheaterbe.dto.OrderRequest;
 import com.example.tanksolarheaterbe.dto.OrderResponse;
+import com.example.tanksolarheaterbe.entities.OrderStatus;
 import com.example.tanksolarheaterbe.services.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,5 +34,12 @@ public class OrderController {
     @GetMapping("/{userId}")
     public ResponseEntity<List<OrderResponse>> getUserOrders(@PathVariable Integer userId) {
         return ResponseEntity.ok(orderService.getUserOrders(userId));
+    }
+
+    @PutMapping("/{orderId}/status")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<OrderResponse> updateStatus(@PathVariable Integer orderId,
+                                                      @RequestParam OrderStatus status) {
+        return ResponseEntity.ok(orderService.updateOrderStatus(orderId, status));
     }
 }

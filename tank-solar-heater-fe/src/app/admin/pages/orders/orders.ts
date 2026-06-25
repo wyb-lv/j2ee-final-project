@@ -1,11 +1,12 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { AdminService } from '../../admin.service';
-import { OrderResponse } from '../../../models/checkout.models';
+import { OrderResponse, OrderStatus } from '../../../models/checkout.models';
 
 @Component({
   selector: 'app-admin-orders',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './orders.html',
   styleUrl: './orders.css',
 })
@@ -16,6 +17,8 @@ export class AdminOrders implements OnInit {
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
   readonly expanded = signal<number | null>(null);
+
+  readonly statuses: OrderStatus[] = ['PENDING', 'SHIPPING', 'DONE', 'CANCELLED'];
 
   ngOnInit(): void {
     this.admin.listOrders().subscribe({
@@ -28,14 +31,24 @@ export class AdminOrders implements OnInit {
     this.expanded.update((cur) => (cur === id ? null : id));
   }
 
+  onStatusChange(order: OrderResponse, newStatus: OrderStatus): void {
+    this.admin.updateOrderStatus(order.id, newStatus).subscribe({
+      next: (updated) => {
+        this.orders.update((list) =>
+          list.map((o) => (o.id === updated.id ? updated : o))
+        );
+      },
+      error: () => {
+        this.error.set(`Failed to update status for order #${order.id}.`);
+      },
+    });
+  }
+
   statusColor(status: string): string {
     switch ((status || '').toUpperCase()) {
-      case 'PAID':
-      case 'COMPLETED':
-      case 'DELIVERED': return 'green';
+      case 'DONE': return 'green';
       case 'PENDING': return 'amber';
-      case 'SHIPPING':
-      case 'PROCESSING': return 'blue';
+      case 'SHIPPING': return 'blue';
       case 'CANCELLED': return 'red';
       default: return 'gray';
     }

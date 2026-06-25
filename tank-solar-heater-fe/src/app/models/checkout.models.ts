@@ -33,11 +33,14 @@ export interface OrderItemResponse {
   discount: number;
 }
 
+export type OrderStatus = 'PENDING' | 'SHIPPING' | 'DONE' | 'CANCELLED';
+
 export interface OrderResponse {
   id: number;
   customerId: number;
+  customerName: string;
   date: string;
-  status: string;
+  status: OrderStatus;
   address: string | null;
   employeeId: number | null;
   total: number;
