@@ -1,10 +1,11 @@
-package com.example.tanksolarheaterbe.config;
+package com.example.tanksolarheaterbe.seed;
 
 import com.example.tanksolarheaterbe.dto.UserRequest;
 import com.example.tanksolarheaterbe.entities.Account;
 import com.example.tanksolarheaterbe.repositories.AccountRepository;
 import com.example.tanksolarheaterbe.services.AccountService;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ public class DataInitializer implements CommandLineRunner {
     private final AccountService accountService;
 
     @Override
-    public void run(String... args) throws Exception{
+    public void run(String @NonNull ... args) throws Exception{
         if(!accountRepository.existsByEmail("admin@gmail.com")) {
             Account admin = new Account();
             admin.setEmail("admin@gmail.com");
