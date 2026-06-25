@@ -1,0 +1,123 @@
+<section class="section pd">
+  <div class="container">
+
+    @if (loading()) {
+      <div class="pd__grid">
+        <div class="pd-skel pd-skel--media"></div>
+        <div class="pd-skel-stack">
+          <div class="pd-skel pd-skel--line w-40"></div>
+          <div class="pd-skel pd-skel--line w-80"></div>
+          <div class="pd-skel pd-skel--line w-30"></div>
+          <div class="pd-skel pd-skel--block"></div>
+        </div>
+      </div>
+    } @else if (failed() || !product()) {
+      <div class="notice">
+        <strong>We couldn't load this product.</strong>
+        <p>It may have been removed, or the catalog service is unavailable.</p>
+        <a class="btn btn--dark" routerLink="/shop">Back to shop</a>
+      </div>
+    } @else if (product(); as p) {
+
+      <!-- Breadcrumb -->
+      <nav class="crumb" aria-label="Breadcrumb">
+        <a routerLink="/">Home</a>
+        <span>/</span>
+        <a routerLink="/shop">Shop</a>
+        <span>/</span>
+        <span class="crumb__cur">{{ p.name }}</span>
+      </nav>
+
+      <div class="pd__grid">
+        <!-- Media -->
+        <div class="pd-media">
+          <div class="pd-media__frame">
+            <img
+              [src]="resolveImageUrl(p.imageUrl) || placeholder"
+              [alt]="p.name"
+              (error)="onImgError($event)"
+            />
+            @if (hasDiscount()) {
+              <span class="pd-media__sale">−{{ p.discount }}% OFF</span>
+            }
+          </div>
+        </div>
+
+        <!-- Details -->
+        <div class="pd-info">
+          @if (p.brandName) {
+            <span class="pd-info__brand">{{ p.brandName }}</span>
+          }
+          <h1 class="pd-info__title">{{ p.name }}</h1>
+
+          @if (p.categoryName) {
+            <a class="pd-info__cat" routerLink="/shop">{{ p.categoryName }}</a>
+          }
+
+          <div class="pd-info__price">
+            <span class="pd-info__now">{{ finalPrice() | currency: 'VND' : 'symbol' : '1.0-0' }}</span>
+            @if (hasDiscount()) {
+              <span class="pd-info__was">{{ p.price | currency: 'VND' : 'symbol' : '1.0-0' }}</span>
+              <span class="pd-info__badge">Save {{ p.discount }}%</span>
+            }
+          </div>
+
+          <p class="pd-info__desc">{{ p.description }}</p>
+
+          <!-- Quantity + actions -->
+          <div class="pd-buy">
+            <div class="pd-qty" role="group" aria-label="Quantity">
+              <button type="button" (click)="decQty()" [disabled]="qty() <= 1" aria-label="Decrease quantity">−</button>
+              <span class="pd-qty__val">{{ qty() }}</span>
+              <button type="button" (click)="incQty()" [disabled]="qty() >= 99" aria-label="Increase quantity">+</button>
+            </div>
+
+            <button class="btn btn--dark pd-buy__add" type="button" (click)="addToCart()">
+              @if (added()) { ✓ Added to cart } @else { Add to cart }
+            </button>
+
+            <button class="btn btn--primary pd-buy__now" type="button" (click)="buyNow()">
+              Buy it now
+            </button>
+          </div>
+
+          @if (savings() > 0) {
+            <p class="pd-save">You save {{ savings() | currency: 'VND' : 'symbol' : '1.0-0' }} on this order.</p>
+          }
+
+          <!-- Trust badges -->
+          <ul class="pd-badges">
+            @for (b of badges; track b.text) {
+              <li><span class="pd-badges__ic">{{ b.icon }}</span>{{ b.text }}</li>
+            }
+          </ul>
+
+          <!-- Highlights -->
+          <div class="pd-highlights">
+            <h2>Why you'll love it</h2>
+            <ul>
+              @for (h of highlights; track h) {
+                <li>{{ h }}</li>
+              }
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related products -->
+      @if (related().length) {
+        <div class="pd-related">
+          <div class="section__head">
+            <span class="eyebrow">More like this</span>
+            <h2>Related products</h2>
+          </div>
+          <div class="grid">
+            @for (r of related(); track r.id) {
+              <app-product-card [product]="r" />
+            }
+          </div>
+        </div>
+      }
+    }
+  </div>
+</section>

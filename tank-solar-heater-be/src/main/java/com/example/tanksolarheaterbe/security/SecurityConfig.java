@@ -61,6 +61,10 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/brands/**").permitAll()
+
+                        // Publicly served uploaded product images.
+                        .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
 
                         .requestMatchers("/api/cart", "/api/cart/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/checkout").permitAll()

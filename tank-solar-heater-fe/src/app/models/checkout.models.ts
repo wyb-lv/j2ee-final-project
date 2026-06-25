@@ -38,6 +38,7 @@ export interface OrderResponse {
   customerId: number;
   date: string;
   status: string;
+  address: string | null;
   employeeId: number | null;
   total: number;
   items: OrderItemResponse[];

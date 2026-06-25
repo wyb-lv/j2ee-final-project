@@ -1,0 +1,73 @@
+/* Products page tweaks (shared admin styles live in styles.css). */
+.r { text-align: right; }
+.c { text-align: center; }
+.name { font-weight: 700; }
+.price { text-align: right; font-weight: 700; }
+
+/* ===== Image upload ===== */
+.adm-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  text-align: center;
+  padding: 22px 16px;
+  border: 2px dashed var(--gray-line);
+  border-radius: 12px;
+  background: var(--bg-alt);
+  color: var(--gray);
+  cursor: pointer;
+  transition: border-color .15s ease, background .15s ease, color .15s ease;
+}
+.adm-dropzone:hover { border-color: var(--water-light); color: var(--ink-soft); }
+.adm-dropzone.dragover { border-color: var(--water); background: #eef5ff; color: var(--ink); }
+.adm-dropzone.busy { cursor: progress; }
+.adm-dropzone .material-symbols-outlined { font-size: 30px; color: var(--water); }
+.adm-dropzone small { font-size: 12px; }
+
+.adm-dropzone .spin { animation: adm-spin 0.9s linear infinite; }
+@keyframes adm-spin { to { transform: rotate(360deg); } }
+
+.adm-upload-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid var(--gray-line);
+  border-radius: 12px;
+  background: #fff;
+}
+.adm-upload-preview img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex: 0 0 auto;
+  background: var(--bg-alt);
+}
+.adm-upload-preview__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.adm-upload-preview__name {
+  font-size: 12px;
+  color: var(--gray);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.adm-link-danger {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #e23a2e;
+  cursor: pointer;
+}
+.adm-link-danger:hover { text-decoration: underline; }

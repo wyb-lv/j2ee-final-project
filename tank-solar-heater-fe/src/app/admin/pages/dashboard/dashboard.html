@@ -1,0 +1,55 @@
+<div class="adm-page-head">
+  <div>
+    <h3>Revenue dashboard</h3>
+    <p>Solar &amp; tank water heating — revenue performance.</p>
+  </div>
+  <label class="rev-datepick">
+    <span class="material-symbols-outlined">calendar_month</span>
+    <input
+      type="date"
+      [value]="selectedDate()"
+      (change)="onDateChange($any($event.target).value)"
+    />
+  </label>
+</div>
+
+<div class="adm-stats">
+  <div class="adm-stat">
+    <span class="adm-stat__ic material-symbols-outlined">today</span>
+    <div class="adm-stat__val">{{ dailyRevenue() | currency: 'VND' : 'symbol' : '1.0-0' }}</div>
+    <div class="adm-stat__label">Daily revenue</div>
+  </div>
+  <div class="adm-stat">
+    <span class="adm-stat__ic material-symbols-outlined">calendar_view_month</span>
+    <div class="adm-stat__val">{{ monthlyRevenue() | currency: 'VND' : 'symbol' : '1.0-0' }}</div>
+    <div class="adm-stat__label">Monthly revenue</div>
+  </div>
+  <div class="adm-stat">
+    <span class="adm-stat__ic material-symbols-outlined">event</span>
+    <div class="adm-stat__val">{{ annualRevenue() | currency: 'VND' : 'symbol' : '1.0-0' }}</div>
+    <div class="adm-stat__label">Annual revenue</div>
+  </div>
+</div>
+
+<div class="adm-card rev-trend">
+  <div class="adm-card__head">
+    <h4>Revenue trend</h4>
+    <span class="rev-trend__sub">Last 7 days up to {{ selectedDate() }}</span>
+  </div>
+
+  @if (loading()) {
+    <div class="adm-loading">Loading…</div>
+  } @else {
+    <div class="rev-chart">
+      @for (bar of trend(); track bar.date) {
+        <div class="rev-bar">
+          <div class="rev-bar__amount">{{ bar.total | currency: 'VND' : 'symbol' : '1.0-0' }}</div>
+          <div class="rev-bar__track">
+            <div class="rev-bar__fill" [style.height.%]="bar.pct"></div>
+          </div>
+          <div class="rev-bar__label">{{ bar.label }}</div>
+        </div>
+      }
+    </div>
+  }
+</div>

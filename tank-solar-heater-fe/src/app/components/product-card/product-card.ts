@@ -1,17 +1,21 @@
 import { Component, Input, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { Product } from '../../models/catalog.models';
 import { CartService, priceAfterDiscount } from '../../services/cart.service';
+import { resolveImageUrl } from '../../shared/image.util';
 
 @Component({
   selector: 'app-product-card',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './product-card.html',
   styleUrl: './product-card.css',
 })
 export class ProductCard {
   private cart = inject(CartService);
   private _product = signal<Product | null>(null);
+
+  readonly resolveImageUrl = resolveImageUrl;
 
   @Input({ required: true })
   set product(value: Product) {

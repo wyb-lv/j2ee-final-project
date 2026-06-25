@@ -8,13 +8,26 @@ import com.example.tanksolarheaterbe.entities.Product;
 import com.example.tanksolarheaterbe.repositories.BrandRepository;
 import com.example.tanksolarheaterbe.repositories.CategoryRepository;
 import com.example.tanksolarheaterbe.repositories.ProductRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +36,56 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
+
+    // ----- Image upload config -----
+    @Value("${app.upload.dir}")
+    private String uploadDir;
+
+    private Path uploadRoot;
+
+    @PostConstruct
+    void initUploadDir() {
+        uploadRoot = Paths.get(uploadDir).toAbsolutePath().normalize();
+        try {
+            Files.createDirectories(uploadRoot);
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not create upload directory: " + uploadRoot, e);
+        }
+    }
+
+    public String storeImage(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No file uploaded");
+        }
+
+        List<String> imageTypes = Arrays.asList("png", "jpg", "jpeg", "svg", "webp");
+
+        String filename = StringUtils.cleanPath(
+                file.getOriginalFilename() == null ? "image" : file.getOriginalFilename());
+
+        String extension = StringUtils.getFilenameExtension(filename);
+
+        if (extension == null || !imageTypes.contains(extension.toLowerCase())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only image files are allowed");
+        }
+
+        Path target = uploadRoot.resolve(filename).normalize();
+
+        // Guard against path traversal escaping the upload root.
+        if (!target.getParent().equals(uploadRoot)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid file name");
+        }
+
+        try {
+            Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to store file", e);
+        }
+
+        // Persist only the bare filename; the frontend resolves it against the
+        // public images path when rendering.
+        return filename;
+    }
 
     public List<ProductResponse> getAll() {
         return productRepository.findAll()

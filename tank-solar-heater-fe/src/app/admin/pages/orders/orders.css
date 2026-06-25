@@ -1,0 +1,8 @@
+/* Orders page tweaks (shared admin styles live in styles.css). */
+.r { text-align: right; }
+.c { text-align: center; }
+.bold { font-weight: 700; }
+.total { text-align: right; font-weight: 700; }
+.addr { max-width: 240px; }
+.sub-cell { background: var(--bg-alt); padding: 0; }
+.sub-table { margin: 0; }

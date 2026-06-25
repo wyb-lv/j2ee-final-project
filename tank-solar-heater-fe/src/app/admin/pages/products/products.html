@@ -1,0 +1,167 @@
+<div class="adm-page-head">
+  <div>
+    <h3>Products</h3>
+    <p>Manage your catalog of heaters, tanks and accessories.</p>
+  </div>
+  <button class="adm-btn adm-btn--primary" (click)="openCreate()">
+    <span class="material-symbols-outlined">add</span> Add product
+  </button>
+</div>
+
+<div class="adm-toolbar">
+  <form class="adm-search" (ngSubmit)="applyFilters()">
+    <span class="material-symbols-outlined">search</span>
+    <input type="search" [(ngModel)]="keyword" name="keyword" placeholder="Search products…" />
+  </form>
+  <select class="adm-select" [ngModel]="categoryId()" (ngModelChange)="onCategory($event)" name="cat">
+    <option [ngValue]="null">All categories</option>
+    @for (c of categories(); track c.id) { <option [ngValue]="c.id">{{ c.name }}</option> }
+  </select>
+</div>
+
+@if (error()) { <div class="adm-error">{{ error() }}</div> }
+
+<div class="adm-card">
+  @if (loading()) {
+    <div class="adm-loading">Loading…</div>
+  } @else if (products().length === 0) {
+    <div class="adm-empty">No products found.</div>
+  } @else {
+    <div class="adm-table-wrap">
+      <table class="adm-table">
+        <thead>
+          <tr>
+            <th>Image</th><th>Name</th><th>Category</th><th>Brand</th>
+            <th class="num r">Price</th><th class="num c">Discount</th><th class="r">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of products(); track p.id) {
+            <tr>
+              <td><img class="adm-thumb" [src]="resolveImageUrl(p.imageUrl) || placeholder" [alt]="p.name" (error)="onImgError($event)" /></td>
+              <td>
+                <div class="name">{{ p.name }}</div>
+                <div class="adm-tagline">{{ p.description }}</div>
+              </td>
+              <td><span class="adm-pill">{{ p.categoryName }}</span></td>
+              <td>{{ p.brandName }}</td>
+              <td class="num price">{{ p.price | currency: 'VND' : 'symbol' : '1.0-0' }}</td>
+              <td class="num c">{{ p.discount > 0 ? p.discount + '%' : '—' }}</td>
+              <td>
+                <div class="adm-actions">
+                  <button class="adm-iconbtn" title="Edit" (click)="openEdit(p)"><span class="material-symbols-outlined">edit</span></button>
+                  <button class="adm-iconbtn adm-iconbtn--danger" title="Delete" (click)="remove(p)"><span class="material-symbols-outlined">delete</span></button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (totalPages() > 1) {
+      <div class="adm-pager">
+        <button [disabled]="page() === 1" (click)="goToPage(page() - 1)">‹</button>
+        @for (n of pageNumbers(); track n) {
+          <button [class.active]="n === page()" (click)="goToPage(n)">{{ n }}</button>
+        }
+        <button [disabled]="page() === totalPages()" (click)="goToPage(page() + 1)">›</button>
+      </div>
+    }
+  }
+</div>
+
+<!-- Modal -->
+@if (modalOpen()) {
+  <div class="adm-modal-overlay" (click)="closeModal()">
+    <div class="adm-modal" (click)="$event.stopPropagation()">
+      <div class="adm-modal__head">
+        <h3>{{ editing() ? 'Edit product' : 'New product' }}</h3>
+        <button class="adm-close" (click)="closeModal()">×</button>
+      </div>
+      <form #f="ngForm" (ngSubmit)="save(f.valid !== false)">
+        <div class="adm-modal__body">
+          <div class="adm-field">
+            <label>Name</label>
+            <input name="name" [(ngModel)]="form.name" required placeholder="Solar collector 180L" />
+          </div>
+          <div class="adm-field">
+            <label>Description</label>
+            <textarea name="description" [(ngModel)]="form.description" rows="2" placeholder="Short description"></textarea>
+          </div>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Price (VND)</label>
+              <input type="number" name="price" [(ngModel)]="form.price" required min="0" />
+            </div>
+            <div class="adm-field">
+              <label>Discount (%)</label>
+              <input type="number" name="discount" [(ngModel)]="form.discount" min="0" max="100" />
+            </div>
+          </div>
+          <div class="adm-grid2">
+            <div class="adm-field">
+              <label>Category</label>
+              <select name="categoryId" [(ngModel)]="form.categoryId" required>
+                <option [ngValue]="0" disabled>Select…</option>
+                @for (c of categories(); track c.id) { <option [ngValue]="c.id">{{ c.name }}</option> }
+              </select>
+            </div>
+            <div class="adm-field">
+              <label>Brand</label>
+              <select name="brandId" [(ngModel)]="form.brandId" required>
+                <option [ngValue]="0" disabled>Select…</option>
+                @for (b of brands(); track b.id) { <option [ngValue]="b.id">{{ b.name }}</option> }
+              </select>
+            </div>
+          </div>
+          <div class="adm-field">
+            <label>Image</label>
+
+            @if (form.imageUrl) {
+              <div class="adm-upload-preview">
+                <img [src]="resolveImageUrl(form.imageUrl)" [alt]="form.name || 'Product image'" (error)="onImgError($event)" />
+                <div class="adm-upload-preview__info">
+                  <span class="adm-upload-preview__name">{{ form.imageUrl }}</span>
+                  <button type="button" class="adm-link-danger" (click)="clearImage()">Remove</button>
+                </div>
+              </div>
+            }
+
+            <div
+              class="adm-dropzone"
+              [class.dragover]="dragOver()"
+              [class.busy]="uploading()"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave($event)"
+              (drop)="onDrop($event)"
+              (click)="fileInput.click()"
+            >
+              <input #fileInput type="file" accept="image/*" hidden (change)="onFileSelected($event)" />
+              @if (uploading()) {
+                <span class="material-symbols-outlined spin">progress_activity</span>
+                <span>Uploading…</span>
+              } @else {
+                <span class="material-symbols-outlined">cloud_upload</span>
+                <span><strong>Drag &amp; drop</strong> an image here, or <u>click to browse</u></span>
+                <small>PNG / JPG up to 5MB</small>
+              }
+            </div>
+
+            @if (uploadError()) { <div class="adm-error">{{ uploadError() }}</div> }
+
+            <!-- Hidden control keeps imageUrl part of the form for validation. -->
+            <input type="hidden" name="imageUrl" [(ngModel)]="form.imageUrl" />
+          </div>
+          @if (formError()) { <div class="adm-error">{{ formError() }}</div> }
+        </div>
+        <div class="adm-modal__foot">
+          <button type="button" class="adm-btn adm-btn--ghost" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="adm-btn adm-btn--primary" [disabled]="saving()">
+            {{ saving() ? 'Saving…' : 'Save' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

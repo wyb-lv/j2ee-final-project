@@ -95,7 +95,7 @@
           <div class="co-items">
             @for (line of cart.lines(); track line.productId) {
               <div class="co-item">
-                <img [src]="line.imageUrl" [alt]="line.name" />
+                <img [src]="resolveImageUrl(line.imageUrl)" [alt]="line.name" />
                 <div class="co-item__info">
                   <span class="co-item__name">{{ line.name }}</span>
                   <span class="co-item__qty">Qty {{ line.quantity }}</span>

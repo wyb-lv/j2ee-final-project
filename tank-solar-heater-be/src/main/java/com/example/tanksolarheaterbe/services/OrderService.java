@@ -79,6 +79,15 @@ public class OrderService {
         return mapToResponse(header, orderDetailRepository.findByOrderHeaderId(header.getId()));
     }
 
+    /** All orders, newest first — for the admin orders screen. */
+    public List<OrderResponse> getAllOrders() {
+        return orderHeaderRepository.findAll()
+                .stream()
+                .sorted((a, b) -> b.getId().compareTo(a.getId()))
+                .map(this::toResponse)
+                .toList();
+    }
+
     public List<OrderResponse> getUserOrders(Integer customerId) {
 
         return orderHeaderRepository.findByCustomerId(customerId)

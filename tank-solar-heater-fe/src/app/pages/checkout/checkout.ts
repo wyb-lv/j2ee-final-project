@@ -6,6 +6,7 @@ import { CartService } from '../../services/cart.service';
 import { CheckoutService } from '../../services/checkout.service';
 import { AuthService } from '../../auth/auth.service';
 import { CheckoutResponse } from '../../models/checkout.models';
+import { resolveImageUrl } from '../../shared/image.util';
 
 @Component({
   selector: 'app-checkout',
@@ -17,6 +18,7 @@ export class Checkout implements OnInit {
   protected readonly cart = inject(CartService);
   private checkoutService = inject(CheckoutService);
   private auth = inject(AuthService);
+  protected readonly resolveImageUrl = resolveImageUrl;
 
   readonly submitting = signal(false);
   readonly error = signal<string | null>(null);

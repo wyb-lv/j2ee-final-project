@@ -1,4 +1,5 @@
 <!-- ===== Header ===== -->
+@if (!chromeless()) {
 <header class="site-header">
   <div class="container site-header__inner">
     <a routerLink="/" class="brand" (click)="closeMenu()">
@@ -26,6 +27,9 @@
                 <strong>{{ auth.user()?.name }}</strong>
                 <small>{{ auth.user()?.email }}</small>
               </div>
+              @if (auth.user()?.role?.toLowerCase() === 'admin') {
+                <a routerLink="/admin" class="user-dropdown__item" (click)="closeUserMenu()">Admin dashboard</a>
+              }
               <button type="button" class="user-dropdown__item" (click)="logout()">Log out</button>
             </div>
           }
@@ -52,6 +56,7 @@
     </div>
   </div>
 </header>
+}
 
 <!-- ===== Page content ===== -->
 <main>
@@ -59,6 +64,7 @@
 </main>
 
 <!-- ===== Cart drawer ===== -->
+@if (!chromeless()) {
 @if (cart.open()) {
   <div class="cart-overlay" (click)="cart.closeCart()"></div>
 }
@@ -78,7 +84,7 @@
     <div class="cart-list">
       @for (line of cart.lines(); track line.productId) {
         <div class="cart-line">
-          <img [src]="line.imageUrl" [alt]="line.name" />
+          <img [src]="resolveImageUrl(line.imageUrl)" [alt]="line.name" />
           <div class="cart-line__info">
             <span class="cart-line__name">{{ line.name }}</span>
             <span class="cart-line__price">{{ line.lineTotal | currency: 'VND' : 'symbol' : '1.0-0' }}</span>
@@ -147,3 +153,4 @@
     <span>Solar &amp; tank water heating, done right.</span>
   </div>
 </footer>
+}

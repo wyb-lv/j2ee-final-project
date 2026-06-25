@@ -38,7 +38,9 @@ export class Login {
     this.auth.login(this.form).subscribe({
       next: () => {
         this.submitting.set(false);
-        this.router.navigateByUrl(this.returnUrl);
+        // Admins go straight to the admin console; everyone else to returnUrl.
+        const isAdmin = this.auth.user()?.role?.toLowerCase() === 'admin';
+        this.router.navigateByUrl(isAdmin ? '/admin' : this.returnUrl);
       },
       error: (err) => {
         this.submitting.set(false);

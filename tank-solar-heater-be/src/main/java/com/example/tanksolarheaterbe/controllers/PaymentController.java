@@ -20,8 +20,9 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    /** Public storefront checkout: cart (from localStorage) -> order + payment. */
+    /** Storefront checkout: cart -> order + payment. Customers/guests only (admins blocked). */
     @PostMapping("/checkout")
+    @PreAuthorize("!hasRole('ADMIN')")
     public ResponseEntity<CheckoutResponse> checkout(@Valid @RequestBody CheckoutRequest request) {
         return ResponseEntity.ok(paymentService.checkout(request));
     }

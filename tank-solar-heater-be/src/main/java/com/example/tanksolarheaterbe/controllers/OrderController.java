@@ -18,6 +18,12 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<OrderResponse>> getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
+
     @PostMapping("/{userId}")
     public ResponseEntity<OrderResponse> createOrder(@PathVariable Integer userId,
                                                      @Valid @RequestBody OrderRequest request) {
