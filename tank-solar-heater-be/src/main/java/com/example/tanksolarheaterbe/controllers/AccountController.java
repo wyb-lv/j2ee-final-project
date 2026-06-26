@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -22,6 +23,12 @@ public class AccountController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserResponse>> getAll() {
         return ResponseEntity.ok(accountService.getAll());
+    }
+
+    /** The signed-in user's own profile (any authenticated role). */
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getCurrent(Principal principal) {
+        return ResponseEntity.ok(accountService.getByEmail(principal.getName()));
     }
 
     @GetMapping("/{id}")

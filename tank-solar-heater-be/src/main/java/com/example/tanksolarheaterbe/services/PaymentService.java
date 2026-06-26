@@ -9,7 +9,8 @@ import com.example.tanksolarheaterbe.repositories.AccountRepository;
 import com.example.tanksolarheaterbe.repositories.OrderDetailRepository;
 import com.example.tanksolarheaterbe.repositories.PaymentRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,17 +29,13 @@ public class PaymentService {
     private final OrderDetailRepository orderDetailRepository;
     private final AccountRepository accountRepository;
     private final OrderService orderService;
-    private final PasswordEncoder passwordEncoder;
 
-    /**
-     * Turns a storefront cart into a persisted order + a pending payment.
-     * Works for guests: the account is looked up by email or created on the fly.
-     */
     @Transactional
     public CheckoutResponse checkout(CheckoutRequest request) {
 
-        Account customer = accountRepository.findByEmail(request.getCustomerEmail())
-                .orElseGet(() -> createGuestAccount(request));
+        // Checkout requires a signed-in customer; the frontend gates /checkout behind login.
+        Account customer = accountRepository.findByEmail(currentUserEmail())
+                .orElseThrow(() -> new RuntimeException("You must be logged in to check out."));
 
         OrderRequest orderRequest = new OrderRequest();
         orderRequest.setItems(request.getItems());
@@ -90,7 +87,6 @@ public class PaymentService {
         return toResponse(paymentRepository.save(payment));
     }
 
-    /** Total actually charged: price after per-item discount, summed across the order. */
     private BigDecimal computeAmount(Integer orderId) {
         return orderDetailRepository.findByOrderHeaderId(orderId).stream()
                 .map(this::lineTotal)
@@ -106,16 +102,13 @@ public class PaymentService {
                 .multiply(BigDecimal.valueOf(detail.getQuantity()));
     }
 
-    private Account createGuestAccount(CheckoutRequest request) {
-        Account account = new Account();
-        account.setEmail(request.getCustomerEmail());
-        account.setName(request.getCustomerName());
-        account.setPhone(request.getCustomerPhone());
-        account.setRole("customer");
-        account.setEnabled(true);
-        // Guest checkout: a non-usable random password (the account can reset later).
-        account.setPassword(passwordEncoder.encode("guest:" + request.getCustomerEmail()));
-        return accountRepository.save(account);
+    /** Email of the authenticated caller, or null when no user is signed in. */
+    private String currentUserEmail() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            return null;
+        }
+        return auth.getName();
     }
 
     private PaymentResponse toResponse(Payment payment) {

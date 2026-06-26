@@ -41,6 +41,12 @@ export const routes: Routes = [
     canActivate: [authGuard, customerGuard],
   },
   {
+    path: 'account',
+    loadComponent: () => import('./pages/account/account').then((m) => m.Account),
+    title: 'My account — SunTank',
+    canActivate: [authGuard, customerGuard],
+  },
+  {
     path: 'login',
     loadComponent: () => import('./pages/login/login').then((m) => m.Login),
     title: 'Log in — SunTank',

@@ -33,5 +33,8 @@ public class OrderHeader {
     @Column(name = "\"employeeId\"")
     private Integer employeeId;
 
+    /** The payment raised for this order (null until checkout creates one). */
+    @OneToOne(mappedBy = "orderHeader", fetch = FetchType.LAZY)
+    private Payment payment;
 
 }

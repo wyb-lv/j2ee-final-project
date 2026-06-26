@@ -29,6 +29,8 @@
               </div>
               @if (auth.user()?.role?.toLowerCase() === 'admin') {
                 <a routerLink="/admin" class="user-dropdown__item" (click)="closeUserMenu()">Admin dashboard</a>
+              } @else {
+                <a routerLink="/account" class="user-dropdown__item" (click)="closeUserMenu()">My account</a>
               }
               <button type="button" class="user-dropdown__item" (click)="logout()">Log out</button>
             </div>

@@ -27,7 +27,6 @@ export class Checkout implements OnInit {
   readonly paymentMethods = [
     { value: 'COD', label: 'Cash on delivery', hint: 'Pay when your heater arrives.' },
     { value: 'BANK_TRANSFER', label: 'Bank transfer', hint: 'We email you transfer details.' },
-    { value: 'CARD', label: 'Credit / debit card', hint: 'Pay securely after we confirm.' },
   ];
 
   // form model

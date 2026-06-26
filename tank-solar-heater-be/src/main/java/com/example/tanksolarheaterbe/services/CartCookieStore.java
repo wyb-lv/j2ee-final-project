@@ -16,11 +16,6 @@ import java.time.Duration;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * Stores the cart in an HTTP cookie ("cart") as a URL-encoded JSON map of
- * productId -> quantity. The server is stateless: the cart travels with the
- * client on every request and is written back on every mutation.
- */
 @Component
 public class CartCookieStore {
 

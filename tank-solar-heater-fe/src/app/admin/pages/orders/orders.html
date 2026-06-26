@@ -17,7 +17,7 @@
       <table class="adm-table">
         <thead>
           <tr>
-            <th>Order</th><th>Customer</th><th>Date</th><th>Status</th><th>Address</th>
+            <th>Order</th><th>Customer</th><th>Date</th><th>Status</th><th>Payment</th><th>Address</th>
             <th class="num r">Total</th><th></th>
           </tr>
         </thead>
@@ -38,6 +38,14 @@
                   }
                 </select>
               </td>
+              <td>
+                @if (o.paymentMethod) {
+                  <span class="pay-method">{{ o.paymentMethod }}</span>
+                  <span class="pay-status pay-status--{{ (o.paymentStatus || '').toLowerCase() }}">{{ o.paymentStatus }}</span>
+                } @else {
+                  —
+                }
+              </td>
               <td class="addr">{{ o.address || '—' }}</td>
               <td class="num total">{{ o.total | currency: 'VND' : 'symbol' : '1.0-0' }}</td>
               <td class="r">
@@ -48,7 +56,7 @@
             </tr>
             @if (expanded() === o.id) {
               <tr>
-                <td colspan="7" class="sub-cell">
+                <td colspan="8" class="sub-cell">
                   <table class="adm-table sub-table">
                     <thead>
                       <tr><th>Product</th><th class="num c">Qty</th><th class="num r">Unit price</th><th class="num c">Disc.</th></tr>

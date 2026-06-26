@@ -7,6 +7,7 @@ import com.example.tanksolarheaterbe.entities.Account;
 import com.example.tanksolarheaterbe.entities.OrderDetail;
 import com.example.tanksolarheaterbe.entities.OrderHeader;
 import com.example.tanksolarheaterbe.entities.OrderStatus;
+import com.example.tanksolarheaterbe.entities.Payment;
 import com.example.tanksolarheaterbe.entities.Product;
 import com.example.tanksolarheaterbe.repositories.AccountRepository;
 import com.example.tanksolarheaterbe.repositories.OrderDetailRepository;
@@ -125,6 +126,8 @@ public class OrderService {
                         .build())
                 .toList();
 
+        Payment payment = header.getPayment();
+
         return OrderResponse.builder()
                 .id(header.getId())
                 .customerId(header.getCustomer().getId())
@@ -134,6 +137,9 @@ public class OrderService {
                 .address(header.getAddress())
                 .employeeId(header.getEmployeeId())
                 .total(total)
+                .paymentMethod(payment != null ? payment.getPaymentMethod() : null)
+                .paymentStatus(payment != null ? payment.getPaymentStatus() : null)
+                .paidAt(payment != null ? payment.getPaidAt() : null)
                 .items(items)
                 .build();
     }

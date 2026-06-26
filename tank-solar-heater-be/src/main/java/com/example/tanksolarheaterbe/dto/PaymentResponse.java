@@ -1,5 +1,6 @@
 package com.example.tanksolarheaterbe.dto;
 
+import com.example.tanksolarheaterbe.entities.PaymentMethod;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 public record PaymentResponse(
         Long id,
         Integer orderId,
-        String paymentMethod,
+        PaymentMethod paymentMethod,
         String paymentStatus,
         BigDecimal amount,
         String transactionId,

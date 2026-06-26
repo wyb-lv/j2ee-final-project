@@ -67,8 +67,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
 
                         .requestMatchers("/api/cart", "/api/cart/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/checkout").permitAll()
 
+                        // Checkout requires a signed-in customer (no guest accounts).
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(

@@ -15,14 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-/**
- * Cookie-backed cart. The cart is stored in the "cart" cookie, so the client
- * must send it (withCredentials) on every call. Each endpoint returns the full,
- * priced cart and writes the updated cart back into the cookie.
- *
- * The cart is a customer/guest feature: admins are denied (403) so they cannot
- * shop from an admin account.
- */
 @RestController
 @RequestMapping("/api/cart")
 @RequiredArgsConstructor

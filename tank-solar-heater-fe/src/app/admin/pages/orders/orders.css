@@ -29,3 +29,21 @@
 .status-select--blue   { color: #2563eb; border-color: #2563eb; }
 .status-select--red    { color: #dc2626; border-color: #dc2626; }
 .status-select--gray   { color: #6b7280; border-color: #6b7280; }
+
+/* Payment cell */
+.pay-method { display: block; font-weight: 600; font-size: 0.82rem; }
+.pay-status {
+  display: inline-block;
+  margin-top: 2px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: #f3f4f6;
+  color: #6b7280;
+}
+.pay-status--paid     { background: #dcfce7; color: #16a34a; }
+.pay-status--pending  { background: #fef3c7; color: #d97706; }
+.pay-status--failed   { background: #fee2e2; color: #dc2626; }
+.pay-status--refunded { background: #e0e7ff; color: #4f46e5; }

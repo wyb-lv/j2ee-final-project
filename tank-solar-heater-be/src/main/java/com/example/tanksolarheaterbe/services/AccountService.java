@@ -33,6 +33,15 @@ public class AccountService {
         return mapToResponse(account);
     }
 
+    /** Profile of the currently authenticated user, looked up by their login email. */
+    public UserResponse getByEmail(String email) {
+
+        Account account = accountRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return mapToResponse(account);
+    }
+
     public UserResponse create(UserRequest request) {
 
         if (accountRepository.existsByEmail(request.getEmail())) {

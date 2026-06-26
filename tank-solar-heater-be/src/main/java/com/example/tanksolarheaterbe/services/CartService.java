@@ -13,11 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Cart module. The cart (productId -> quantity) is supplied by the caller from
- * the client cookie; this service mutates that map in place and prices it
- * against current product data. Nothing is stored on the server.
- */
 @Service
 @RequiredArgsConstructor
 public class CartService {

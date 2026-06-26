@@ -10,7 +10,7 @@ export interface CheckoutRequest {
   customerEmail: string;
   customerPhone?: string;
   customerAddress?: string;
-  paymentMethod: string; // 'COD' | 'BANK_TRANSFER' | 'CARD'
+  paymentMethod: string; // 'COD' | 'BANK_TRANSFER'
   items: CheckoutItem[];
 }
 
@@ -44,6 +44,9 @@ export interface OrderResponse {
   address: string | null;
   employeeId: number | null;
   total: number;
+  paymentMethod: string | null;
+  paymentStatus: string | null;
+  paidAt: string | null;
   items: OrderItemResponse[];
 }
 
@@ -51,3 +54,5 @@ export interface CheckoutResponse {
   order: OrderResponse;
   payment: PaymentResponse;
 }
+
+

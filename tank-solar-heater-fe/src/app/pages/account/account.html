@@ -1,0 +1,103 @@
+<section class="acc-hero">
+  <div class="container">
+    <span class="eyebrow eyebrow--light">My account</span>
+    <h1>Hello, {{ profile()?.name || 'there' }}</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    @if (loading()) {
+      <div class="acc-loading">Loading your account…</div>
+    } @else if (error()) {
+      <div class="acc-error">{{ error() }}</div>
+    } @else {
+
+      <!-- ===== Profile ===== -->
+      <div class="acc-grid">
+        <div class="acc-card acc-profile">
+          <h3 class="acc-block-title">Your details</h3>
+          @if (profile(); as p) {
+            <dl class="acc-info">
+              <div><dt>Name</dt><dd>{{ p.name }}</dd></div>
+              <div><dt>Email</dt><dd>{{ p.email }}</dd></div>
+              <div><dt>Phone</dt><dd>{{ p.phone || '—' }}</dd></div>
+              <div><dt>Account type</dt><dd class="cap">{{ p.role }}</dd></div>
+            </dl>
+          }
+        </div>
+
+        <div class="acc-card acc-stat">
+          <span class="acc-stat__num">{{ orderCount() }}</span>
+          <span class="acc-stat__label">{{ orderCount() === 1 ? 'order placed' : 'orders placed' }}</span>
+          <a routerLink="/shop" class="btn btn--dark">Continue shopping</a>
+        </div>
+      </div>
+
+      <!-- ===== Orders ===== -->
+      <h3 class="acc-block-title acc-orders-title">Your orders</h3>
+
+      @if (orders().length === 0) {
+        <div class="acc-empty">
+          <span class="acc-empty__ic">📦</span>
+          <p>You haven't placed any orders yet.</p>
+          <a routerLink="/shop" class="btn btn--primary">Browse heaters</a>
+        </div>
+      } @else {
+        <div class="acc-orders">
+          @for (o of orders(); track o.id) {
+            <div class="acc-order">
+              <button class="acc-order__head" type="button" (click)="toggle(o.id)">
+                <div class="acc-order__id">
+                  <strong>Order #{{ o.id }}</strong>
+                  <small>{{ o.date }}</small>
+                </div>
+                <span class="acc-badge acc-badge--{{ statusColor(o.status) }}">{{ o.status }}</span>
+                <span class="acc-order__total">{{ o.total | currency: 'VND' : 'symbol' : '1.0-0' }}</span>
+                <span class="material-symbols-outlined acc-order__chev">
+                  {{ expanded() === o.id ? 'expand_less' : 'expand_more' }}
+                </span>
+              </button>
+
+              @if (expanded() === o.id) {
+                <div class="acc-order__body">
+                  <div class="acc-order__meta">
+                    <div>
+                      <span class="acc-meta-label">Payment</span>
+                      @if (o.paymentMethod) {
+                        <span>{{ o.paymentMethod }}</span>
+                        <span class="acc-badge acc-badge--{{ paymentColor(o.paymentStatus) }}">{{ o.paymentStatus }}</span>
+                      } @else {
+                        <span>—</span>
+                      }
+                    </div>
+                    <div>
+                      <span class="acc-meta-label">Delivery to</span>
+                      <span>{{ o.address || '—' }}</span>
+                    </div>
+                  </div>
+
+                  <table class="acc-items">
+                    <thead>
+                      <tr><th>Product</th><th class="c">Qty</th><th class="r">Unit price</th></tr>
+                    </thead>
+                    <tbody>
+                      @for (it of o.items; track it.productId) {
+                        <tr>
+                          <td>{{ it.productName }}</td>
+                          <td class="c">{{ it.quantity }}</td>
+                          <td class="r">{{ it.price | currency: 'VND' : 'symbol' : '1.0-0' }}</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    }
+  </div>
+</section>

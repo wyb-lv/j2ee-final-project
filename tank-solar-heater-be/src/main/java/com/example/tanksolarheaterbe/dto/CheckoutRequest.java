@@ -1,9 +1,11 @@
 package com.example.tanksolarheaterbe.dto;
 
+import com.example.tanksolarheaterbe.entities.PaymentMethod;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.List;
@@ -26,9 +28,8 @@ public class CheckoutRequest {
 
     private String customerAddress;
 
-    /** COD, BANK_TRANSFER, CARD ... */
-    @NotBlank
-    private String paymentMethod;
+    @NotNull
+    private PaymentMethod paymentMethod;
 
     @NotEmpty
     @Valid

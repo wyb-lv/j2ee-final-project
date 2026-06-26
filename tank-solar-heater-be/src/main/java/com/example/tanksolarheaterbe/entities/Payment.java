@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "payments")
+@Table(name = "P ayments")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,9 +23,9 @@ public class Payment {
     @JoinColumn(name = "order_id", nullable = false)
     private OrderHeader orderHeader;
 
-    /** COD, BANK_TRANSFER, CARD, MOMO, VNPAY ... */
+    @Enumerated(EnumType.STRING)
     @Column(name = "payment_method", nullable = false, length = 30)
-    private String paymentMethod;
+    private PaymentMethod paymentMethod;
 
     /** PENDING, PAID, FAILED, REFUNDED */
     @Column(name = "payment_status", nullable = false, length = 20)
