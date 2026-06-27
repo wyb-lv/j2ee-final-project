@@ -48,7 +48,8 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
                         )
-                )            .authorizeHttpRequests(auth -> auth
+                )
+                .authorizeHttpRequests(auth -> auth
 
                         .requestMatchers("/api/auth/**").permitAll()
 
@@ -79,4 +80,3 @@ public class SecurityConfig {
         return http.build();
     }
 }
-

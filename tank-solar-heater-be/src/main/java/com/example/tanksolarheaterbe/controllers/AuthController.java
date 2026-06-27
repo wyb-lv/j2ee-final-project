@@ -6,9 +6,12 @@ import com.example.tanksolarheaterbe.dto.UserRequest;
 import com.example.tanksolarheaterbe.dto.UserResponse;
 import com.example.tanksolarheaterbe.repositories.AccountRepository;
 import com.example.tanksolarheaterbe.security.JwtService;
+import com.example.tanksolarheaterbe.security.TokenBlacklistService;
 import com.example.tanksolarheaterbe.services.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +28,7 @@ public class AuthController {
     private final JwtService jwtService;
     private final AccountRepository accountRepository;
     private final AuthService authService;
+    private final TokenBlacklistService tokenBlacklistService;
 
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
@@ -47,5 +51,21 @@ public class AuthController {
     @PostMapping("/register")
     public UserResponse register(@Valid @RequestBody UserRequest request) {
         return authService.register(request);
+    }
+
+    /** Invalidates the caller's JWT server-side so it can no longer authenticate. */
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
+
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            try {
+                tokenBlacklistService.blacklist(token, jwtService.extractExpiration(token));
+            } catch (Exception ignored) {
+                // Malformed/expired token: nothing to invalidate.
+            }
+        }
+        return ResponseEntity.noContent().build();
     }
 }

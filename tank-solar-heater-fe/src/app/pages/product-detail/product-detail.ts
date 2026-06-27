@@ -91,7 +91,7 @@ export class ProductDetail implements OnInit {
   }
 
   private loadRelated(p: Product): void {
-    this.catalog.getProducts({ categoryId: p.categoryId, page: 1 }).subscribe({
+    this.catalog.getProductsByCategory(p.categoryId, { page: 1 }).subscribe({
       next: (pg) => {
         this.related.set(pg.content.filter((x) => x.id !== p.id).slice(0, 4));
       },

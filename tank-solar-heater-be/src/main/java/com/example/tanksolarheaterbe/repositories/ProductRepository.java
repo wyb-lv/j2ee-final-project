@@ -8,22 +8,24 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
-    List<Product> findByCategoryId(Integer categoryId);
-
-    List<Product> findByNameContainingIgnoreCase(String keyword);
-
-    List<Product> findByPriceBetween(BigDecimal min, BigDecimal max);
-
     Page<Product> findAll(Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE " +
-            "(:keyword IS NULL OR :keyword = '' OR LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
-            "AND (:categoryId IS NULL OR p.category.id = :categoryId)")
-    Page<Product> findFilteredProducts(@Param("keyword") String keyword,
-                                       @Param("categoryId") Integer categoryId,
-                                       Pageable pageable);
+    // ----- One paginated finder per filter (each backs its own API endpoint) -----
+
+    /** Keyword match across name, description, brand name and category name. */
+    @Query("SELECT p FROM Product p LEFT JOIN p.brand b LEFT JOIN p.category c WHERE " +
+            "LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(b.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(c.name) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    Page<Product> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+    Page<Product> findByCategoryId(Integer categoryId, Pageable pageable);
+
+    Page<Product> findByBrandId(Integer brandId, Pageable pageable);
+
+    Page<Product> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable);
 }

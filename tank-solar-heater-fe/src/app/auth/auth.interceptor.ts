@@ -8,7 +8,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
   const token = auth.token();
 
-  if (token && req.url.startsWith(environment.apiBase) && !req.url.includes('/auth/')) {
+  // Login/register have no token yet; everything else (incl. /auth/logout) gets it.
+  const isPreAuthRoute = req.url.includes('/auth/login') || req.url.includes('/auth/register');
+
+  if (token && req.url.startsWith(environment.apiBase) && !isPreAuthRoute) {
     req = req.clone({ setHeaders: { Authorization: `Bearer ${token}` } });
   }
   return next(req);

@@ -20,3 +20,17 @@ export interface BrandRequest {
 export interface CategoryRequest {
   name: string;
 }
+
+/** Revenue dashboard figures — all computed server-side. */
+export interface TrendPoint {
+  date: string;   // YYYY-MM-DD
+  total: number;
+  pct: number;    // bar height as % of the window's peak
+}
+
+export interface DashboardStats {
+  dailyRevenue: number;
+  monthlyRevenue: number;
+  annualRevenue: number;
+  trend: TrendPoint[];
+}

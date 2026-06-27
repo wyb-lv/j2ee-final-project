@@ -59,6 +59,23 @@
 }
 .sort select:focus { border-color: var(--water-light); }
 
+/* ===== Price range ===== */
+.price-filter { display: flex; align-items: center; gap: 8px; }
+.price-filter label { font-size: 14px; font-weight: 600; color: var(--gray); }
+.price-filter input {
+  width: 96px;
+  font-family: var(--font);
+  font-size: 14px;
+  padding: 11px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--gray-line);
+  background: #fff;
+  outline: none;
+}
+.price-filter input:focus { border-color: var(--water-light); }
+.price-filter__dash { color: var(--gray); }
+.price-filter .btn { padding: 11px 18px; }
+
 /* ===== Chips ===== */
 .chips {
   display: flex;
@@ -66,6 +83,7 @@
   gap: 10px;
   margin-bottom: 22px;
 }
+.chips--brand { margin-top: -8px; }
 .chip {
   font-family: var(--font);
   font-size: 14px;

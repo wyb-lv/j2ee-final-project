@@ -98,9 +98,25 @@ public class ProductService {
         return productRepository.findAll(pageable).map(this::mapToResponse);
     }
 
-    public Page<ProductResponse> getFilteredProducts(String keyword, Integer categoryId, Pageable pageable) {
-        return productRepository.findFilteredProducts(keyword, categoryId, pageable)
-                .map(this::mapToResponse);
+    // ----- One method per filter (each exposed as its own API endpoint) -----
+
+    public Page<ProductResponse> searchByKeyword(String keyword, Pageable pageable) {
+        return productRepository.searchByKeyword(keyword, pageable).map(this::mapToResponse);
+    }
+
+    public Page<ProductResponse> getByCategory(Integer categoryId, Pageable pageable) {
+        return productRepository.findByCategoryId(categoryId, pageable).map(this::mapToResponse);
+    }
+
+    public Page<ProductResponse> getByBrand(Integer brandId, Pageable pageable) {
+        return productRepository.findByBrandId(brandId, pageable).map(this::mapToResponse);
+    }
+
+    public Page<ProductResponse> getByPriceRange(BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable) {
+        // Treat missing bounds as 0 / very large so a one-sided range still works.
+        BigDecimal min = minPrice != null ? minPrice : BigDecimal.ZERO;
+        BigDecimal max = maxPrice != null ? maxPrice : new BigDecimal("999999999999");
+        return productRepository.findByPriceBetween(min, max, pageable).map(this::mapToResponse);
     }
 
     public ProductResponse getById(Integer id) {

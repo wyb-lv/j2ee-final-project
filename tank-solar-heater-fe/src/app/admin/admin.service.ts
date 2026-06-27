@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Category, Page, Product } from '../models/catalog.models';
 import { OrderResponse, OrderStatus } from '../models/checkout.models';
-import { Brand, BrandRequest, CategoryRequest, ProductRequest } from './admin.models';
+import { Brand, BrandRequest, CategoryRequest, DashboardStats, ProductRequest } from './admin.models';
 
 export interface ProductQuery {
   page?: number;
@@ -67,6 +67,14 @@ export class AdminService {
   }
   deleteBrand(id: number): Observable<void> {
     return this.http.delete<void>(`${this.base}/brands/${id}`);
+  }
+
+  // ----- Dashboard -----
+  /** Server-computed revenue stats for the given reference date (YYYY-MM-DD). */
+  getDashboardStats(date?: string): Observable<DashboardStats> {
+    let params = new HttpParams();
+    if (date) params = params.set('date', date);
+    return this.http.get<DashboardStats>(`${this.base}/dashboard/stats`, { params });
   }
 
   // ----- Orders -----

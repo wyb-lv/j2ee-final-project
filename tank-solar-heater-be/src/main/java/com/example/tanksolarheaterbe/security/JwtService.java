@@ -36,6 +36,11 @@ public class JwtService {
         return extractClaims(token).getSubject();
     }
 
+    public Date extractExpiration(String token) {
+
+        return extractClaims(token).getExpiration();
+    }
+
     public boolean isTokenValid(String token) {
 
         return extractClaims(token)
@@ -52,4 +57,3 @@ public class JwtService {
                 .getBody();
     }
 }
-

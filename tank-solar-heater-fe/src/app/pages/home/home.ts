@@ -36,7 +36,7 @@ export class Home implements OnInit {
     // Only call the backend in the browser to avoid SSR fetch failures.
     if (!isPlatformBrowser(this.platformId)) return;
     this.loading.set(true);
-    this.catalog.getProducts({ page: 1 }).subscribe({
+    this.catalog.getAllProducts({ page: 1 }).subscribe({
       next: (page) => {
         this.featured.set(page.content.slice(0, 4));
         this.loading.set(false);

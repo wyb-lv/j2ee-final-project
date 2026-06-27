@@ -23,6 +23,14 @@
         <button type="submit" class="btn btn--dark search__btn">Search</button>
       </form>
 
+      <div class="price-filter">
+        <label>Price</label>
+        <input type="number" name="minPrice" [(ngModel)]="minPrice" min="0" placeholder="Min" aria-label="Minimum price" />
+        <span class="price-filter__dash">–</span>
+        <input type="number" name="maxPrice" [(ngModel)]="maxPrice" min="0" placeholder="Max" aria-label="Maximum price" />
+        <button type="button" class="btn btn--dark" (click)="applyPriceFilter()">Go</button>
+      </div>
+
       <div class="sort">
         <label for="sort">Sort</label>
         <select
@@ -38,11 +46,11 @@
       </div>
     </div>
 
-    <!-- Category chips -->
+    <!-- Category chips (one filter at a time) -->
     <div class="chips">
       <button
         class="chip"
-        [class.active]="selectedCategory() === null"
+        [class.active]="mode() === 'all'"
         (click)="selectCategory(null)"
         type="button"
       >
@@ -51,7 +59,7 @@
       @for (c of categories(); track c.id) {
         <button
           class="chip"
-          [class.active]="selectedCategory() === c.id"
+          [class.active]="mode() === 'category' && selectedCategory() === c.id"
           (click)="selectCategory(c.id)"
           type="button"
         >
@@ -60,11 +68,27 @@
       }
     </div>
 
+    <!-- Brand chips -->
+    @if (brands().length > 0) {
+      <div class="chips chips--brand">
+        @for (b of brands(); track b.id) {
+          <button
+            class="chip"
+            [class.active]="mode() === 'brand' && selectedBrand() === b.id"
+            (click)="selectBrand(b.id)"
+            type="button"
+          >
+            {{ b.name }}
+          </button>
+        }
+      </div>
+    }
+
     <!-- Result meta -->
     @if (!loading() && !failed()) {
       <div class="result-meta">
         <span>{{ totalElements() }} product{{ totalElements() === 1 ? '' : 's' }} found</span>
-        @if (keyword || selectedCategory() !== null || sort()) {
+        @if (mode() !== 'all' || sort()) {
           <button class="link-btn" (click)="clearAll()" type="button">Clear filters</button>
         }
       </div>

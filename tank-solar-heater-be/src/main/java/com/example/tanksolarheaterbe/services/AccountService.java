@@ -53,7 +53,7 @@ public class AccountService {
         account.setEmail(request.getEmail());
         account.setPassword(passwordEncoder.encode(request.getPassword()));
         account.setPhone(request.getPhone());
-        account.setRole("customer");
+        account.setRole("CUSTOMER");
         account.setEnabled(true);
 
         Account saved = accountRepository.save(account);

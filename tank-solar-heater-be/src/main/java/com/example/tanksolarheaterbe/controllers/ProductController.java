@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 @RestController
@@ -26,17 +27,46 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<Page<ProductResponse>> getProducts(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) Integer categoryId,
             Pageable pageable) {
+        return ResponseEntity.ok(productService.getProductsPaged(pageRequest(page, pageable)));
+    }
 
-        // Convert 1-based frontend page to 0-based backend page
-        Pageable correctedPageable = PageRequest.of(page - 1, AppConfig.PAGE_SIZE, pageable.getSort());
+    @GetMapping("/search")
+    public ResponseEntity<Page<ProductResponse>> searchByKeyword(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "") String keyword,
+            Pageable pageable) {
+        return ResponseEntity.ok(productService.searchByKeyword(keyword, pageRequest(page, pageable)));
+    }
 
-        Page<ProductResponse> productPage =
-                productService.getFilteredProducts(keyword, categoryId, correctedPageable);
+    @GetMapping("/by-category")
+    public ResponseEntity<Page<ProductResponse>> getByCategory(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam Integer categoryId,
+            Pageable pageable) {
+        return ResponseEntity.ok(productService.getByCategory(categoryId, pageRequest(page, pageable)));
+    }
 
-        return ResponseEntity.ok(productPage);
+    /** Filter by brand. */
+    @GetMapping("/by-brand")
+    public ResponseEntity<Page<ProductResponse>> getByBrand(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam Integer brandId,
+            Pageable pageable) {
+        return ResponseEntity.ok(productService.getByBrand(brandId, pageRequest(page, pageable)));
+    }
+
+    @GetMapping("/by-price")
+    public ResponseEntity<Page<ProductResponse>> getByPrice(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            Pageable pageable) {
+        return ResponseEntity.ok(productService.getByPriceRange(minPrice, maxPrice, pageRequest(page, pageable)));
+    }
+
+    private Pageable pageRequest(int page, Pageable pageable) {
+        return PageRequest.of(page - 1, AppConfig.PAGE_SIZE, pageable.getSort());
     }
 
     @GetMapping("/{id}")

@@ -39,6 +39,11 @@ export class AuthService {
   }
 
   logout(): void {
+    // Invalidate the token server-side (best-effort) while it's still attached by
+    // the interceptor, then drop the client's copy. The local clear must stay —
+    // the server can't erase the browser's storage.
+    this.http.post(`${this.base}/auth/logout`, {}).subscribe({ error: () => {} });
+
     this.user.set(null);
     if (!isPlatformBrowser(this.platformId)) return;
     localStorage.removeItem(TOKEN_KEY);
