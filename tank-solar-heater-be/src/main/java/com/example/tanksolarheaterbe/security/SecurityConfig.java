@@ -125,6 +125,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/brands/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                         .requestMatchers("/api/cart", "/api/cart/**").permitAll()
+                        // VNPay's servers/browser callbacks carry no JWT; trust is enforced
+                        // by the HMAC signature check inside PaymentService.confirmVnPay.
+                        .requestMatchers(HttpMethod.GET, "/api/payments/vnpay/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth -> oauth

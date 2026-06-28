@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Read(//c/c/HSU/J2EE/final/tank-solar-heater-be/src/main/java/com/example/tanksolarheaterbe/config/**)",
-      "Read(//c/c/HSU/J2EE/final/tank-solar-heater-be/src/main/java/com/example/tanksolarheaterbe/dto/**)",
-      "Read(//c/c/HSU/J2EE/final/tank-solar-heater-fe/src/app/auth/**)"
-    ]
-  }
-}

@@ -64,7 +64,7 @@ public class CartController {
                 .body(cartService.getCart(Map.of()));
     }
 
-    /** Returns the cart body together with the refreshed cart cookie. */
+
     private ResponseEntity<CartResponse> withCart(CartResponse cart, Map<Integer, Integer> items) {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookieStore.buildCookie(items).toString())
