@@ -19,8 +19,7 @@ import java.util.List;
 public class PaymentController {
 
     private final PaymentService paymentService;
-
-    /** Storefront checkout: cart -> order + payment. Customers/guests only (admins blocked). */
+    
     @PostMapping("/checkout")
     @PreAuthorize("!hasRole('ADMIN')")
     public ResponseEntity<CheckoutResponse> checkout(@Valid @RequestBody CheckoutRequest request) {

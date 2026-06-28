@@ -5,11 +5,11 @@
       <span>Sun<span>Tank</span></span>
     </a>
 
-    <h1 class="auth__title">Welcome back</h1>
-    <p class="auth__sub">Log in to continue.</p>
+    <h1 class="auth__title">Chào mừng trở lại</h1>
+    <p class="auth__sub">Đăng nhập để tiếp tục.</p>
 
     @if (fromCheckout) {
-      <p class="auth__note">🔒 Please log in to complete your checkout.</p>
+      <p class="auth__note">🔒 Vui lòng đăng nhập để hoàn tất thanh toán.</p>
     }
 
     @if (error()) {
@@ -22,17 +22,17 @@
         <input id="email" type="email" name="email" [(ngModel)]="form.email" required email placeholder="you@email.com" autocomplete="email" />
       </div>
       <div class="auth__field">
-        <label for="password">Password</label>
+        <label for="password">Mật khẩu</label>
         <input id="password" type="password" name="password" [(ngModel)]="form.password" required placeholder="••••••••" autocomplete="current-password" />
       </div>
 
       <button type="submit" class="btn btn--primary auth__submit" [disabled]="submitting()">
-        {{ submitting() ? 'Logging in…' : 'Log in' }}
+        {{ submitting() ? 'Đang đăng nhập…' : 'Đăng nhập' }}
       </button>
     </form>
 
     <p class="auth__alt">
-      New here? <a routerLink="/register" [queryParams]="{ returnUrl }">Create an account</a>
+      Chưa có tài khoản? <a routerLink="/register" [queryParams]="{ returnUrl }">Tạo tài khoản</a>
     </p>
   </div>
 </section>

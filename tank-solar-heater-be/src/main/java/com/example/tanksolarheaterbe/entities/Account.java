@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.time.Instant;
+
 @Getter
 @Setter
 @Entity
@@ -35,5 +37,11 @@ public class Account {
     @Column(name = "enabled", nullable = false)
     private Boolean enabled;
 
+    /** Opaque refresh token; null once the user logs out. One active token per account. */
+    @Column(name = "refresh_token", length = 100)
+    private String refreshToken;
+
+    @Column(name = "refresh_token_expiry")
+    private Instant refreshTokenExpiry;
 
 }

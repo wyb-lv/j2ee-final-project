@@ -41,7 +41,19 @@
               <td>
                 @if (o.paymentMethod) {
                   <span class="pay-method">{{ o.paymentMethod }}</span>
-                  <span class="pay-status pay-status--{{ (o.paymentStatus || '').toLowerCase() }}">{{ o.paymentStatus }}</span>
+                  @if (o.paymentId) {
+                    <select
+                      class="status-select"
+                      [ngModel]="o.paymentStatus"
+                      [class]="'status-select--' + payColor(o.paymentStatus)"
+                      (ngModelChange)="onPaymentStatusChange(o, $event)">
+                      @for (s of paymentStatuses; track s) {
+                        <option [value]="s">{{ s }}</option>
+                      }
+                    </select>
+                  } @else {
+                    <span class="pay-status pay-status--{{ (o.paymentStatus || '').toLowerCase() }}">{{ o.paymentStatus }}</span>
+                  }
                 } @else {
                   —
                 }

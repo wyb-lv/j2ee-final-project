@@ -28,7 +28,7 @@ export class Account implements OnInit {
   ngOnInit(): void {
     const userId = this.auth.user()?.id;
     if (!userId) {
-      this.error.set('You need to be signed in to view your account.');
+      this.error.set('Bạn cần đăng nhập để xem tài khoản.');
       this.loading.set(false);
       return;
     }
@@ -44,7 +44,7 @@ export class Account implements OnInit {
         this.loading.set(false);
       },
       error: () => {
-        this.error.set('Could not load your account. Please try again.');
+        this.error.set('Không thể tải tài khoản. Vui lòng thử lại.');
         this.loading.set(false);
       },
     });
@@ -71,6 +71,44 @@ export class Account implements OnInit {
       case 'FAILED': return 'red';
       case 'REFUNDED': return 'blue';
       default: return 'gray';
+    }
+  }
+
+  // ----- Vietnamese display labels for backend enum values -----
+
+  statusLabel(status: string): string {
+    switch ((status || '').toUpperCase()) {
+      case 'PENDING': return 'Chờ xử lý';
+      case 'SHIPPING': return 'Đang giao';
+      case 'DONE': return 'Hoàn thành';
+      case 'CANCELLED': return 'Đã hủy';
+      default: return status;
+    }
+  }
+
+  paymentLabel(status: string | null): string {
+    switch ((status || '').toUpperCase()) {
+      case 'PAID': return 'Đã thanh toán';
+      case 'PENDING': return 'Chờ thanh toán';
+      case 'FAILED': return 'Thất bại';
+      case 'REFUNDED': return 'Đã hoàn tiền';
+      default: return status ?? '';
+    }
+  }
+
+  methodLabel(method: string | null): string {
+    switch ((method || '').toUpperCase()) {
+      case 'COD': return 'Thanh toán khi nhận hàng';
+      case 'BANK_TRANSFER': return 'Chuyển khoản ngân hàng';
+      default: return method ?? '';
+    }
+  }
+
+  roleLabel(role: string | null): string {
+    switch ((role || '').toUpperCase()) {
+      case 'ADMIN': return 'Quản trị viên';
+      case 'CUSTOMER': return 'Khách hàng';
+      default: return role ?? '';
     }
   }
 }

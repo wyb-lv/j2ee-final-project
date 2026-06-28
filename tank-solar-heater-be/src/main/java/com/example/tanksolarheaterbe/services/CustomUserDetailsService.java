@@ -3,6 +3,7 @@ package com.example.tanksolarheaterbe.services;
 import com.example.tanksolarheaterbe.entities.Account;
 import com.example.tanksolarheaterbe.repositories.AccountRepository;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final AccountRepository accountRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email)
+    public @NonNull UserDetails loadUserByUsername(@NonNull String email)
             throws UsernameNotFoundException {
 
         Account account = accountRepository.findByEmail(email)

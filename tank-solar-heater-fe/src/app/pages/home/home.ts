@@ -20,16 +20,16 @@ export class Home implements OnInit {
   readonly failed = signal(false);
 
   readonly features = [
-    { icon: '⚡', title: 'Up to 70% Savings', text: 'Cut your water-heating energy bill with high-efficiency systems.' },
-    { icon: '☀', title: 'Solar Powered', text: 'Harness free sunshine for endless hot water, rain or shine.' },
-    { icon: '🛡', title: '10-Year Warranty', text: 'Stainless tanks and panels built to outlast the competition.' },
-    { icon: '🔧', title: 'Free Installation', text: 'Certified technicians handle setup, plumbing and disposal.' },
+    { icon: '⚡', title: 'Tiết kiệm tới 70%', text: 'Cắt giảm hóa đơn năng lượng làm nóng nước với hệ thống hiệu suất cao.' },
+    { icon: '☀', title: 'Năng lượng mặt trời', text: 'Tận dụng ánh nắng miễn phí cho nước nóng bất tận, dù mưa hay nắng.' },
+    { icon: '🛡', title: 'Bảo hành 10 năm', text: 'Bình chứa và tấm thu thép không gỉ bền vượt trội so với đối thủ.' },
+    { icon: '🔧', title: 'Lắp đặt miễn phí', text: 'Kỹ thuật viên được chứng nhận lo việc lắp đặt, đường ống và thu dọn.' },
   ];
 
   readonly steps = [
-    { n: '01', title: 'Pick your system', text: 'Solar collector, storage tank, or hybrid heat pump — sized to your home.' },
-    { n: '02', title: 'We install it', text: 'Our team mounts, plumbs and tests everything, usually in a single day.' },
-    { n: '03', title: 'Enjoy hot water', text: 'Smart controls keep water hot while quietly slashing your energy use.' },
+    { n: '01', title: 'Chọn hệ thống của bạn', text: 'Bộ thu năng lượng mặt trời, bình chứa, hoặc bơm nhiệt lai — phù hợp với ngôi nhà của bạn.' },
+    { n: '02', title: 'Chúng tôi lắp đặt', text: 'Đội ngũ của chúng tôi lắp đặt, đấu đường ống và kiểm tra mọi thứ, thường chỉ trong một ngày.' },
+    { n: '03', title: 'Tận hưởng nước nóng', text: 'Điều khiển thông minh giữ nước luôn nóng trong khi âm thầm cắt giảm mức tiêu thụ năng lượng của bạn.' },
   ];
 
   ngOnInit(): void {

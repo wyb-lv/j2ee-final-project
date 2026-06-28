@@ -51,7 +51,6 @@ public class OrderService {
         header.setDate(LocalDate.now());
         header.setStatus(OrderStatus.PENDING);
         header.setCustomer(customer);
-        header.setEmployeeId(request.getEmployeeId());
         header.setAddress(request.getAddress());
 
         OrderHeader savedHeader = orderHeaderRepository.save(header);
@@ -135,8 +134,8 @@ public class OrderService {
                 .date(header.getDate())
                 .status(header.getStatus().name())
                 .address(header.getAddress())
-                .employeeId(header.getEmployeeId())
                 .total(total)
+                .paymentId(payment != null ? payment.getId() : null)
                 .paymentMethod(payment != null ? payment.getPaymentMethod() : null)
                 .paymentStatus(payment != null ? payment.getPaymentStatus() : null)
                 .paidAt(payment != null ? payment.getPaidAt() : null)

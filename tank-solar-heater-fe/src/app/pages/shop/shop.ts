@@ -38,15 +38,22 @@ export class Shop implements OnInit {
   maxPrice: number | null = null;
   sort = signal('');
 
-  readonly pages = computed(() =>
-    Array.from({ length: this.totalPages() }, (_, i) => i + 1)
-  );
+  /** Up to 3 page numbers, sliding so the current page sits in the middle when possible. */
+  readonly pages = computed(() => {
+    const total = this.totalPages();
+    const windowSize = 3;
+    if (total <= windowSize) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+    const start = Math.min(Math.max(this.page() - 1, 1), total - windowSize + 1);
+    return Array.from({ length: windowSize }, (_, i) => start + i);
+  });
 
   readonly sortOptions = [
-    { value: '', label: 'Featured' },
-    { value: 'price,asc', label: 'Price: Low to High' },
-    { value: 'price,desc', label: 'Price: High to Low' },
-    { value: 'name,asc', label: 'Name: A–Z' },
+    { value: '', label: 'Nổi bật' },
+    { value: 'price,asc', label: 'Giá: Thấp đến cao' },
+    { value: 'price,desc', label: 'Giá: Cao đến thấp' },
+    { value: 'name,asc', label: 'Tên: A–Z' },
   ];
 
   ngOnInit(): void {

@@ -15,6 +15,7 @@ public record ProductResponse(
         String description,
         BigDecimal price,
         BigDecimal discount,
+        BigDecimal finalPrice,
         String imageUrl
 ) {
 }

@@ -5,9 +5,16 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   token: string;
+  refreshToken: string;
   id: number;
   name: string;
   role: string;
+}
+
+/** Returned by /auth/refresh: a new access token plus a rotated refresh token. */
+export interface TokenResponse {
+  token: string;
+  refreshToken: string;
 }
 
 export interface RegisterRequest {

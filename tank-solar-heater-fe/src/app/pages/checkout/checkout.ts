@@ -25,8 +25,8 @@ export class Checkout implements OnInit {
   readonly result = signal<CheckoutResponse | null>(null);
 
   readonly paymentMethods = [
-    { value: 'COD', label: 'Cash on delivery', hint: 'Pay when your heater arrives.' },
-    { value: 'BANK_TRANSFER', label: 'Bank transfer', hint: 'We email you transfer details.' },
+    { value: 'COD', label: 'Thanh toán khi nhận hàng', hint: 'Thanh toán khi nhận được hàng.' },
+    { value: 'BANK_TRANSFER', label: 'Chuyển khoản ngân hàng', hint: 'Chúng tôi sẽ gửi thông tin chuyển khoản qua email.' },
   ];
 
   // form model
@@ -53,7 +53,7 @@ export class Checkout implements OnInit {
   placeOrder(formValid: boolean): void {
     this.error.set(null);
     if (!formValid) {
-      this.error.set('Please fill in your name, a valid email and an address.');
+      this.error.set('Vui lòng nhập họ tên, email hợp lệ và địa chỉ.');
       return;
     }
     if (this.cart.lines().length === 0) return;
@@ -74,8 +74,8 @@ export class Checkout implements OnInit {
           this.submitting.set(false);
           this.error.set(
             err?.status === 0
-              ? "Couldn't reach the server. Is the backend running on localhost:8080?"
-              : 'Something went wrong placing your order. Please try again.'
+              ? 'Không thể kết nối đến máy chủ. Backend có đang chạy trên localhost:8080 không?'
+              : 'Đã xảy ra lỗi khi đặt hàng. Vui lòng thử lại.'
           );
         },
       });

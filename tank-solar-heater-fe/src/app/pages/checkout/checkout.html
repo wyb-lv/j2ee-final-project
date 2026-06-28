@@ -1,7 +1,7 @@
 <section class="co-hero">
   <div class="container">
-    <span class="eyebrow eyebrow--light">Checkout</span>
-    <h1>Complete your order</h1>
+    <span class="eyebrow eyebrow--light">Thanh toán</span>
+    <h1>Hoàn tất đơn hàng</h1>
   </div>
 </section>
 
@@ -12,27 +12,27 @@
     @if (result(); as res) {
       <div class="co-success">
         <span class="co-success__ic">✓</span>
-        <h2>Thank you, your order is placed!</h2>
-        <p>We've received order <strong>#{{ res.order.id }}</strong>. A confirmation will be sent to your email.</p>
+        <h2>Cảm ơn bạn, đơn hàng đã được đặt!</h2>
+        <p>Chúng tôi đã nhận được đơn hàng <strong>#{{ res.order.id }}</strong>. Một email xác nhận sẽ được gửi đến bạn.</p>
 
         <div class="co-receipt">
           <div class="co-receipt__row">
-            <span>Order number</span><strong>#{{ res.order.id }}</strong>
+            <span>Mã đơn hàng</span><strong>#{{ res.order.id }}</strong>
           </div>
           <div class="co-receipt__row">
-            <span>Payment method</span><strong>{{ res.payment.paymentMethod }}</strong>
+            <span>Phương thức thanh toán</span><strong>{{ res.payment.paymentMethod }}</strong>
           </div>
           <div class="co-receipt__row">
-            <span>Payment status</span>
+            <span>Trạng thái thanh toán</span>
             <strong class="co-status">{{ res.payment.paymentStatus }}</strong>
           </div>
           <div class="co-receipt__row co-receipt__row--total">
-            <span>Amount</span>
+            <span>Số tiền</span>
             <strong>{{ res.payment.amount | currency: 'VND' : 'symbol' : '1.0-0' }}</strong>
           </div>
         </div>
 
-        <a routerLink="/shop" class="btn btn--primary">Continue shopping</a>
+        <a routerLink="/shop" class="btn btn--primary">Tiếp tục mua sắm</a>
       </div>
     }
 
@@ -40,9 +40,9 @@
     @else if (cart.lines().length === 0) {
       <div class="co-empty">
         <span class="co-empty__ic">🛒</span>
-        <h2>Your cart is empty</h2>
-        <p>Add a heater to your cart before checking out.</p>
-        <a routerLink="/shop" class="btn btn--dark">Browse heaters</a>
+        <h2>Giỏ hàng của bạn đang trống</h2>
+        <p>Hãy thêm sản phẩm vào giỏ hàng trước khi thanh toán.</p>
+        <a routerLink="/shop" class="btn btn--dark">Xem sản phẩm</a>
       </div>
     }
 
@@ -51,9 +51,9 @@
       <form class="co-grid" #f="ngForm" (ngSubmit)="placeOrder(f.valid !== false)">
         <!-- Left: details -->
         <div class="co-main">
-          <h3 class="co-block-title">Your details</h3>
+          <h3 class="co-block-title">Thông tin của bạn</h3>
           <div class="co-field">
-            <label for="name">Full name</label>
+            <label for="name">Họ tên</label>
             <input id="name" name="customerName" [(ngModel)]="form.customerName" required placeholder="Nguyen Van A" />
           </div>
           <div class="co-row">
@@ -62,16 +62,16 @@
               <input id="email" type="email" name="customerEmail" [(ngModel)]="form.customerEmail" required email placeholder="you@email.com" />
             </div>
             <div class="co-field">
-              <label for="phone">Phone</label>
+              <label for="phone">Số điện thoại</label>
               <input id="phone" name="customerPhone" [(ngModel)]="form.customerPhone" placeholder="09xx xxx xxx" />
             </div>
           </div>
           <div class="co-field">
-            <label for="address">Delivery address</label>
-            <textarea id="address" name="customerAddress" [(ngModel)]="form.customerAddress" required rows="3" placeholder="House number, street, district, city"></textarea>
+            <label for="address">Địa chỉ giao hàng</label>
+            <textarea id="address" name="customerAddress" [(ngModel)]="form.customerAddress" required rows="3" placeholder="Số nhà, đường, quận/huyện, thành phố"></textarea>
           </div>
 
-          <h3 class="co-block-title">Payment method</h3>
+          <h3 class="co-block-title">Phương thức thanh toán</h3>
           <div class="co-methods">
             @for (m of paymentMethods; track m.value) {
               <label class="co-method" [class.active]="form.paymentMethod === m.value">
@@ -91,14 +91,14 @@
 
         <!-- Right: summary -->
         <aside class="co-summary">
-          <h3 class="co-block-title">Order summary</h3>
+          <h3 class="co-block-title">Tóm tắt đơn hàng</h3>
           <div class="co-items">
             @for (line of cart.lines(); track line.productId) {
               <div class="co-item">
                 <img [src]="resolveImageUrl(line.imageUrl)" [alt]="line.name" />
                 <div class="co-item__info">
                   <span class="co-item__name">{{ line.name }}</span>
-                  <span class="co-item__qty">Qty {{ line.quantity }}</span>
+                  <span class="co-item__qty">SL {{ line.quantity }}</span>
                 </div>
                 <span class="co-item__price">{{ line.lineTotal | currency: 'VND' : 'symbol' : '1.0-0' }}</span>
               </div>
@@ -108,12 +108,12 @@
           @if (cart.cart(); as priced) {
             <div class="co-breakdown">
               <div class="co-breakdown__row">
-                <span>Subtotal</span>
+                <span>Tạm tính</span>
                 <span>{{ priced.subtotal | currency: 'VND' : 'symbol' : '1.0-0' }}</span>
               </div>
               @if (priced.discountTotal > 0) {
                 <div class="co-breakdown__row co-breakdown__row--save">
-                  <span>Discount</span>
+                  <span>Giảm giá</span>
                   <span>−{{ priced.discountTotal | currency: 'VND' : 'symbol' : '1.0-0' }}</span>
                 </div>
               }
@@ -121,20 +121,20 @@
           }
 
           <div class="co-total">
-            <span>Total</span>
+            <span>Tổng cộng</span>
             <strong>{{ cart.total() | currency: 'VND' : 'symbol' : '1.0-0' }}</strong>
           </div>
 
           @switch (cart.pricingState()) {
-            @case ('loading') { <p class="co-pricing">Updating cart…</p> }
-            @case ('ok') { <p class="co-pricing co-pricing--ok">✓ Cart synced with server</p> }
-            @case ('error') { <p class="co-pricing co-pricing--warn">Cart unavailable — is the server running?</p> }
+            @case ('loading') { <p class="co-pricing">Đang cập nhật giỏ hàng…</p> }
+            @case ('ok') { <p class="co-pricing co-pricing--ok">✓ Giỏ hàng đã đồng bộ với máy chủ</p> }
+            @case ('error') { <p class="co-pricing co-pricing--warn">Không thể tải giỏ hàng — máy chủ có đang chạy không?</p> }
           }
 
           <button type="submit" class="btn btn--primary co-place" [disabled]="submitting()">
-            {{ submitting() ? 'Placing order…' : 'Place order' }}
+            {{ submitting() ? 'Đang đặt hàng…' : 'Đặt hàng' }}
           </button>
-          <a routerLink="/shop" class="co-back">← Continue shopping</a>
+          <a routerLink="/shop" class="co-back">← Tiếp tục mua sắm</a>
         </aside>
       </form>
     }

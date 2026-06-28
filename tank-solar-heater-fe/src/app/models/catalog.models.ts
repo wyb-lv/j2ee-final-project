@@ -20,6 +20,7 @@ export interface Product {
   description: string;
   price: number;
   discount: number; // percentage, e.g. 10 = 10% off
+  finalPrice: number; // price after discount, computed by the backend
   imageUrl: string;
 }
 

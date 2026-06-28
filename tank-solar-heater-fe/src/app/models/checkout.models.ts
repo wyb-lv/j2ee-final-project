@@ -44,6 +44,7 @@ export interface OrderResponse {
   address: string | null;
   employeeId: number | null;
   total: number;
+  paymentId: number | null;
   paymentMethod: string | null;
   paymentStatus: string | null;
   paidAt: string | null;

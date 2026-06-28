@@ -1,0 +1,64 @@
+<!-- Floating launcher -->
+<button
+  class="chat-fab"
+  type="button"
+  (click)="toggle()"
+  [class.is-open]="open()"
+  aria-label="Trợ lý quản trị"
+>
+  <span class="material-symbols-outlined">{{ open() ? 'close' : 'smart_toy' }}</span>
+</button>
+
+<!-- Chat panel -->
+@if (open()) {
+  <section class="chat-panel" role="dialog" aria-label="Trợ lý quản trị">
+    <header class="chat-panel__head">
+      <span class="material-symbols-outlined">smart_toy</span>
+      <div>
+        <strong>Trợ lý quản trị</strong>
+        <small>Hỏi về sản phẩm, đơn hàng, doanh thu…</small>
+      </div>
+    </header>
+
+    <div class="chat-panel__body" #scrollBox>
+      @if (messages().length === 0) {
+        <div class="chat-empty">
+          <p>Xin chào! Tôi có thể giúp bạn tra cứu dữ liệu cửa hàng.</p>
+          <ul>
+            <li>Doanh thu tháng này là bao nhiêu?</li>
+            <li>10 đơn hàng gần nhất</li>
+            <li>Có bao nhiêu sản phẩm đang bán?</li>
+          </ul>
+        </div>
+      }
+
+      @for (m of messages(); track $index) {
+        <div class="chat-msg" [class.chat-msg--user]="m.role === 'user'">
+          <div class="chat-bubble">{{ m.text }}</div>
+        </div>
+      }
+
+      @if (sending()) {
+        <div class="chat-msg">
+          <div class="chat-bubble chat-bubble--typing">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <form class="chat-panel__foot" (ngSubmit)="send()">
+      <input
+        type="text"
+        [(ngModel)]="draft"
+        name="draft"
+        placeholder="Nhập câu hỏi…"
+        autocomplete="off"
+        [disabled]="sending()"
+      />
+      <button type="submit" class="chat-send" [disabled]="sending() || !draft().trim()" aria-label="Gửi">
+        <span class="material-symbols-outlined">send</span>
+      </button>
+    </form>
+  </section>
+}

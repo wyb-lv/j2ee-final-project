@@ -1,59 +1,48 @@
 package com.example.tanksolarheaterbe.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jwt.JwsHeader;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
-import java.util.Date;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
+/**
+ * Issues access tokens (JWTs). Verification of incoming tokens is handled by Spring
+ * Security's resource server (see {@link SecurityConfig}).
+ */
 @Service
 public class JwtService {
 
-    private static final String SECRET =
-            "mysecretkeymysecretkeymysecretkey12345";
+    private final JwtEncoder jwtEncoder;
 
-    private final Key key =
-            Keys.hmacShaKeyFor(SECRET.getBytes());
-
-    public String generateToken(String email) {
-
-        return Jwts.builder()
-                .setSubject(email)
-                .setIssuedAt(new Date())
-                .setExpiration(
-                        new Date(System.currentTimeMillis()
-                                + 1000 * 60 * 60 * 24)
-                )
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+    public JwtService(JwtEncoder jwtEncoder) {
+        this.jwtEncoder = jwtEncoder;
     }
 
-    public String extractEmail(String token) {
+    /**
+     * @param email subject of the token
+     * @param role  account role (e.g. "admin"); stored as the {@code role} claim
+     *              and later mapped to a {@code ROLE_*} authority.
+     */
+    public String generateToken(String email, String role) {
 
-        return extractClaims(token).getSubject();
-    }
+        Instant now = Instant.now();
 
-    public Date extractExpiration(String token) {
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .subject(email)
+                .issuedAt(now)
+                // Short-lived: clients renew it via the refresh-token endpoint.
+                .expiresAt(now.plus(15, ChronoUnit.MINUTES))
+                .claim("role", role.toUpperCase())
+                .build();
 
-        return extractClaims(token).getExpiration();
-    }
+        JwsHeader header = JwsHeader.with(MacAlgorithm.HS256).build();
 
-    public boolean isTokenValid(String token) {
-
-        return extractClaims(token)
-                .getExpiration()
-                .after(new Date());
-    }
-
-    private Claims extractClaims(String token) {
-
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        return jwtEncoder.encode(JwtEncoderParameters.from(header, claims))
+                .getTokenValue();
     }
 }

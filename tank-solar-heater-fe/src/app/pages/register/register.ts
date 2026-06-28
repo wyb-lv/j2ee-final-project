@@ -27,7 +27,7 @@ export class Register {
   submit(valid: boolean): void {
     this.error.set(null);
     if (!valid) {
-      this.error.set('Please fill in your name, a valid email and a password.');
+      this.error.set('Vui lòng nhập họ tên, email hợp lệ và mật khẩu.');
       return;
     }
     this.submitting.set(true);
@@ -40,8 +40,8 @@ export class Register {
         this.submitting.set(false);
         this.error.set(
           err?.status === 0
-            ? "Couldn't reach the server. Is the backend running on localhost:8080?"
-            : 'Could not create the account. The email may already be in use.'
+            ? 'Không thể kết nối đến máy chủ. Backend có đang chạy trên localhost:8080 không?'
+            : 'Không thể tạo tài khoản. Email có thể đã được sử dụng.'
         );
       },
     });

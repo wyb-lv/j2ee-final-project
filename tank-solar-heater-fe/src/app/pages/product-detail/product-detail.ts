@@ -3,7 +3,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CatalogService } from '../../services/catalog.service';
 import { Product } from '../../models/catalog.models';
-import { CartService, priceAfterDiscount } from '../../services/cart.service';
+import { CartService } from '../../services/cart.service';
 import { ProductCard } from '../../components/product-card/product-card';
 import { resolveImageUrl } from '../../shared/image.util';
 
@@ -30,10 +30,8 @@ export class ProductDetail implements OnInit {
   readonly resolveImageUrl = resolveImageUrl;
 
   readonly hasDiscount = computed(() => Number(this.product()?.discount ?? 0) > 0);
-  readonly finalPrice = computed(() => {
-    const p = this.product();
-    return p ? priceAfterDiscount(p) : 0;
-  });
+  // Unit price comes from the backend (product.finalPrice); only the qty preview is multiplied here.
+  readonly finalPrice = computed(() => this.product()?.finalPrice ?? 0);
   readonly savings = computed(() => {
     const p = this.product();
     if (!p || !this.hasDiscount()) return 0;
@@ -43,15 +41,15 @@ export class ProductDetail implements OnInit {
 
   // Static selling points — mirrors the Shopify "trust badges" / highlights blocks.
   readonly badges = [
-    { icon: '🚚', text: 'Free delivery & installation' },
-    { icon: '🛡️', text: '5-year manufacturer warranty' },
-    { icon: '🔒', text: 'Secure checkout' },
+    { icon: '🚚', text: 'Giao hàng & lắp đặt miễn phí' },
+    { icon: '🛡️', text: 'Bảo hành chính hãng 5 năm' },
+    { icon: '🔒', text: 'Thanh toán an toàn' },
   ];
   readonly highlights = [
-    'High-efficiency thermal collector for year-round hot water',
-    'Corrosion-resistant tank with premium insulation',
-    'Low running cost — cuts water-heating energy use',
-    'Professional installation by certified technicians',
+    'Tấm thu nhiệt hiệu suất cao, cấp nước nóng quanh năm',
+    'Bình chứa chống ăn mòn với lớp cách nhiệt cao cấp',
+    'Chi phí vận hành thấp — giảm điện năng đun nước nóng',
+    'Lắp đặt chuyên nghiệp bởi kỹ thuật viên được chứng nhận',
   ];
 
   readonly placeholder =

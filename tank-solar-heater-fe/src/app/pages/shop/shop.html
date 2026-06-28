@@ -1,9 +1,9 @@
 <!-- ===== Page hero ===== -->
 <section class="shop-hero">
   <div class="container">
-    <span class="eyebrow eyebrow--light">Shop</span>
-    <h1>Solar &amp; tank water heaters</h1>
-    <p>Browse our full range of solar collectors, storage tanks and hybrid systems.</p>
+    <span class="eyebrow eyebrow--light">Cửa hàng</span>
+    <h1>Máy nước nóng năng lượng mặt trời &amp; bình chứa</h1>
+    <p>Khám phá toàn bộ các dòng tấm thu năng lượng mặt trời, bình chứa và hệ thống hybrid.</p>
   </div>
 </section>
 
@@ -17,22 +17,22 @@
           type="search"
           name="keyword"
           [(ngModel)]="keyword"
-          placeholder="Search heaters, tanks, brands…"
-          aria-label="Search products"
+          placeholder="Tìm máy nước nóng, bình chứa, thương hiệu…"
+          aria-label="Tìm kiếm sản phẩm"
         />
-        <button type="submit" class="btn btn--dark search__btn">Search</button>
+        <button type="submit" class="btn btn--dark search__btn">Tìm kiếm</button>
       </form>
 
       <div class="price-filter">
-        <label>Price</label>
-        <input type="number" name="minPrice" [(ngModel)]="minPrice" min="0" placeholder="Min" aria-label="Minimum price" />
+        <label>Giá</label>
+        <input type="number" name="minPrice" [(ngModel)]="minPrice" min="0" placeholder="Tối thiểu" aria-label="Giá tối thiểu" />
         <span class="price-filter__dash">–</span>
-        <input type="number" name="maxPrice" [(ngModel)]="maxPrice" min="0" placeholder="Max" aria-label="Maximum price" />
-        <button type="button" class="btn btn--dark" (click)="applyPriceFilter()">Go</button>
+        <input type="number" name="maxPrice" [(ngModel)]="maxPrice" min="0" placeholder="Tối đa" aria-label="Giá tối đa" />
+        <button type="button" class="btn btn--dark" (click)="applyPriceFilter()">Lọc</button>
       </div>
 
       <div class="sort">
-        <label for="sort">Sort</label>
+        <label for="sort">Sắp xếp</label>
         <select
           id="sort"
           [ngModel]="sort()"
@@ -54,7 +54,7 @@
         (click)="selectCategory(null)"
         type="button"
       >
-        All products
+        Tất cả sản phẩm
       </button>
       @for (c of categories(); track c.id) {
         <button
@@ -87,9 +87,9 @@
     <!-- Result meta -->
     @if (!loading() && !failed()) {
       <div class="result-meta">
-        <span>{{ totalElements() }} product{{ totalElements() === 1 ? '' : 's' }} found</span>
+        <span>{{ totalElements() }} sản phẩm</span>
         @if (mode() !== 'all' || sort()) {
-          <button class="link-btn" (click)="clearAll()" type="button">Clear filters</button>
+          <button class="link-btn" (click)="clearAll()" type="button">Xóa bộ lọc</button>
         }
       </div>
     }
@@ -103,15 +103,15 @@
       </div>
     } @else if (failed()) {
       <div class="notice">
-        <strong>Couldn't reach the catalog service.</strong>
-        <p>Make sure the backend (tank-solar-heater-be) is running on <code>localhost:8080</code>, then try again.</p>
-        <button class="btn btn--dark" (click)="load()" type="button">Retry</button>
+        <strong>Không thể kết nối tới dịch vụ danh mục sản phẩm.</strong>
+        <p>Hãy đảm bảo backend (tank-solar-heater-be) đang chạy trên <code>localhost:8080</code>, rồi thử lại.</p>
+        <button class="btn btn--dark" (click)="load()" type="button">Thử lại</button>
       </div>
     } @else if (products().length === 0) {
       <div class="notice">
-        <strong>No products match your search.</strong>
-        <p>Try a different keyword or category.</p>
-        <button class="btn btn--ghost" (click)="clearAll()" type="button">Reset filters</button>
+        <strong>Không tìm thấy sản phẩm phù hợp.</strong>
+        <p>Hãy thử từ khóa hoặc danh mục khác.</p>
+        <button class="btn btn--ghost" (click)="clearAll()" type="button">Đặt lại bộ lọc</button>
       </div>
     } @else {
       <div class="grid">
@@ -123,13 +123,13 @@
 
     <!-- Pagination -->
     @if (totalPages() > 1 && !loading() && !failed()) {
-      <nav class="pager" aria-label="Pagination">
+      <nav class="pager" aria-label="Phân trang">
         <button
           class="pager__nav"
           (click)="goToPage(page() - 1)"
           [disabled]="page() === 1"
           type="button"
-        >‹ Prev</button>
+        >‹ Trước</button>
 
         @for (p of pages(); track p) {
           <button
@@ -145,7 +145,7 @@
           (click)="goToPage(page() + 1)"
           [disabled]="page() === totalPages()"
           type="button"
-        >Next ›</button>
+        >Sau ›</button>
       </nav>
     }
   </div>

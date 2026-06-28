@@ -2,7 +2,7 @@ import { Component, Input, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Product } from '../../models/catalog.models';
-import { CartService, priceAfterDiscount } from '../../services/cart.service';
+import { CartService } from '../../services/cart.service';
 import { resolveImageUrl } from '../../shared/image.util';
 
 @Component({
@@ -26,10 +26,8 @@ export class ProductCard {
   }
 
   readonly hasDiscount = computed(() => Number(this._product()?.discount ?? 0) > 0);
-  readonly finalPrice = computed(() => {
-    const p = this._product();
-    return p ? priceAfterDiscount(p) : 0;
-  });
+  // Backend-computed discounted price; the card only displays it.
+  readonly finalPrice = computed(() => this._product()?.finalPrice ?? 0);
 
   readonly placeholder =
     'data:image/svg+xml;utf8,' +

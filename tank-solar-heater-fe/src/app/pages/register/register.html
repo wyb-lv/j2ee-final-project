@@ -5,8 +5,8 @@
       <span>Sun<span>Tank</span></span>
     </a>
 
-    <h1 class="auth__title">Create your account</h1>
-    <p class="auth__sub">Sign up to check out and track your orders.</p>
+    <h1 class="auth__title">Tạo tài khoản</h1>
+    <p class="auth__sub">Đăng ký để thanh toán và theo dõi đơn hàng của bạn.</p>
 
     @if (error()) {
       <p class="auth__error">{{ error() }}</p>
@@ -14,7 +14,7 @@
 
     <form #f="ngForm" (ngSubmit)="submit(f.valid !== false)">
       <div class="auth__field">
-        <label for="name">Full name</label>
+        <label for="name">Họ tên</label>
         <input id="name" name="name" [(ngModel)]="form.name" required placeholder="Nguyen Van A" autocomplete="name" />
       </div>
       <div class="auth__field">
@@ -22,21 +22,21 @@
         <input id="email" type="email" name="email" [(ngModel)]="form.email" required email placeholder="you@email.com" autocomplete="email" />
       </div>
       <div class="auth__field">
-        <label for="password">Password</label>
+        <label for="password">Mật khẩu</label>
         <input id="password" type="password" name="password" [(ngModel)]="form.password" required minlength="4" placeholder="••••••••" autocomplete="new-password" />
       </div>
       <div class="auth__field">
-        <label for="phone">Phone</label>
+        <label for="phone">Số điện thoại</label>
         <input id="phone" name="phone" [(ngModel)]="form.phone" placeholder="09xx xxx xxx" autocomplete="tel" />
       </div>
 
       <button type="submit" class="btn btn--primary auth__submit" [disabled]="submitting()">
-        {{ submitting() ? 'Creating account…' : 'Create account' }}
+        {{ submitting() ? 'Đang tạo tài khoản…' : 'Tạo tài khoản' }}
       </button>
     </form>
 
     <p class="auth__alt">
-      Already have an account? <a routerLink="/login" [queryParams]="{ returnUrl }">Log in</a>
+      Đã có tài khoản? <a routerLink="/login" [queryParams]="{ returnUrl }">Đăng nhập</a>
     </p>
   </div>
 </section>

@@ -13,17 +13,17 @@
       </div>
     } @else if (failed() || !product()) {
       <div class="notice">
-        <strong>We couldn't load this product.</strong>
-        <p>It may have been removed, or the catalog service is unavailable.</p>
-        <a class="btn btn--dark" routerLink="/shop">Back to shop</a>
+        <strong>Không thể tải sản phẩm này.</strong>
+        <p>Sản phẩm có thể đã bị gỡ bỏ, hoặc dịch vụ danh mục sản phẩm không khả dụng.</p>
+        <a class="btn btn--dark" routerLink="/shop">Quay lại cửa hàng</a>
       </div>
     } @else if (product(); as p) {
 
       <!-- Breadcrumb -->
-      <nav class="crumb" aria-label="Breadcrumb">
-        <a routerLink="/">Home</a>
+      <nav class="crumb" aria-label="Đường dẫn">
+        <a routerLink="/">Trang chủ</a>
         <span>/</span>
-        <a routerLink="/shop">Shop</a>
+        <a routerLink="/shop">Cửa hàng</a>
         <span>/</span>
         <span class="crumb__cur">{{ p.name }}</span>
       </nav>
@@ -38,7 +38,7 @@
               (error)="onImgError($event)"
             />
             @if (hasDiscount()) {
-              <span class="pd-media__sale">−{{ p.discount }}% OFF</span>
+              <span class="pd-media__sale">−{{ p.discount }}% GIẢM</span>
             }
           </div>
         </div>
@@ -58,7 +58,7 @@
             <span class="pd-info__now">{{ finalPrice() | currency: 'VND' : 'symbol' : '1.0-0' }}</span>
             @if (hasDiscount()) {
               <span class="pd-info__was">{{ p.price | currency: 'VND' : 'symbol' : '1.0-0' }}</span>
-              <span class="pd-info__badge">Save {{ p.discount }}%</span>
+              <span class="pd-info__badge">Tiết kiệm {{ p.discount }}%</span>
             }
           </div>
 
@@ -66,23 +66,23 @@
 
           <!-- Quantity + actions -->
           <div class="pd-buy">
-            <div class="pd-qty" role="group" aria-label="Quantity">
-              <button type="button" (click)="decQty()" [disabled]="qty() <= 1" aria-label="Decrease quantity">−</button>
+            <div class="pd-qty" role="group" aria-label="Số lượng">
+              <button type="button" (click)="decQty()" [disabled]="qty() <= 1" aria-label="Giảm số lượng">−</button>
               <span class="pd-qty__val">{{ qty() }}</span>
-              <button type="button" (click)="incQty()" [disabled]="qty() >= 99" aria-label="Increase quantity">+</button>
+              <button type="button" (click)="incQty()" [disabled]="qty() >= 99" aria-label="Tăng số lượng">+</button>
             </div>
 
             <button class="btn btn--dark pd-buy__add" type="button" (click)="addToCart()">
-              @if (added()) { ✓ Added to cart } @else { Add to cart }
+              @if (added()) { ✓ Đã thêm vào giỏ } @else { Thêm vào giỏ }
             </button>
 
             <button class="btn btn--primary pd-buy__now" type="button" (click)="buyNow()">
-              Buy it now
+              Mua ngay
             </button>
           </div>
 
           @if (savings() > 0) {
-            <p class="pd-save">You save {{ savings() | currency: 'VND' : 'symbol' : '1.0-0' }} on this order.</p>
+            <p class="pd-save">Bạn tiết kiệm {{ savings() | currency: 'VND' : 'symbol' : '1.0-0' }} cho đơn hàng này.</p>
           }
 
           <!-- Trust badges -->
@@ -94,7 +94,7 @@
 
           <!-- Highlights -->
           <div class="pd-highlights">
-            <h2>Why you'll love it</h2>
+            <h2>Vì sao bạn sẽ thích sản phẩm này</h2>
             <ul>
               @for (h of highlights; track h) {
                 <li>{{ h }}</li>
@@ -108,8 +108,8 @@
       @if (related().length) {
         <div class="pd-related">
           <div class="section__head">
-            <span class="eyebrow">More like this</span>
-            <h2>Related products</h2>
+            <span class="eyebrow">Sản phẩm tương tự</span>
+            <h2>Sản phẩm liên quan</h2>
           </div>
           <div class="grid">
             @for (r of related(); track r.id) {

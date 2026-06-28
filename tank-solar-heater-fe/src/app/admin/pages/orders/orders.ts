@@ -19,6 +19,7 @@ export class AdminOrders implements OnInit {
   readonly expanded = signal<number | null>(null);
 
   readonly statuses: OrderStatus[] = ['PENDING', 'SHIPPING', 'DONE', 'CANCELLED'];
+  readonly paymentStatuses: string[] = ['PENDING', 'PAID', 'FAILED', 'REFUNDED'];
 
   ngOnInit(): void {
     this.admin.listOrders().subscribe({
@@ -44,12 +45,40 @@ export class AdminOrders implements OnInit {
     });
   }
 
+  onPaymentStatusChange(order: OrderResponse, newStatus: string): void {
+    if (order.paymentId == null) return;
+    this.admin.updatePaymentStatus(order.paymentId, newStatus).subscribe({
+      next: (payment) => {
+        this.orders.update((list) =>
+          list.map((o) =>
+            o.id === order.id
+              ? { ...o, paymentStatus: payment.paymentStatus, paidAt: payment.paidAt }
+              : o
+          )
+        );
+      },
+      error: () => {
+        this.error.set(`Failed to update payment status for order #${order.id}.`);
+      },
+    });
+  }
+
   statusColor(status: string): string {
     switch ((status || '').toUpperCase()) {
       case 'DONE': return 'green';
       case 'PENDING': return 'amber';
       case 'SHIPPING': return 'blue';
       case 'CANCELLED': return 'red';
+      default: return 'gray';
+    }
+  }
+
+  payColor(status: string | null): string {
+    switch ((status || '').toUpperCase()) {
+      case 'PAID': return 'green';
+      case 'PENDING': return 'amber';
+      case 'FAILED': return 'red';
+      case 'REFUNDED': return 'blue';
       default: return 'gray';
     }
   }

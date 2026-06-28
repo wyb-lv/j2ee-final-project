@@ -18,6 +18,7 @@ public record OrderResponse(
         String address,
         Integer employeeId,
         BigDecimal total,
+        Long paymentId,
         PaymentMethod paymentMethod,
         String paymentStatus,
         LocalDateTime paidAt,

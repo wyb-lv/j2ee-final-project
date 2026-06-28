@@ -1,10 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+import { AdminChat } from './components/admin-chat/admin-chat';
 
 @Component({
   selector: 'app-admin-layout',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, AdminChat],
   templateUrl: './admin-layout.html',
   styleUrl: './admin-layout.css',
 })

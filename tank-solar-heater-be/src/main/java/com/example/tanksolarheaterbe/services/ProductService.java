@@ -21,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -183,11 +184,20 @@ public class ProductService {
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .discount(product.getDiscount())
+                .finalPrice(finalPrice(product))
                 .imageUrl(product.getImageUrl())
                 .categoryId(category != null ? category.getId() : null)
                 .categoryName(category != null ? category.getName() : null)
                 .brandId(brand != null ? brand.getId() : null)
                 .brandName(brand != null ? brand.getName() : null)
                 .build();
+    }
+
+    /** Unit price after the per-product percentage discount: price * (1 - discount/100). */
+    private BigDecimal finalPrice(Product product) {
+        BigDecimal price = product.getPrice() != null ? product.getPrice() : BigDecimal.ZERO;
+        BigDecimal discount = product.getDiscount() != null ? product.getDiscount() : BigDecimal.ZERO;
+        BigDecimal factor = BigDecimal.ONE.subtract(discount.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP));
+        return price.multiply(factor).setScale(2, RoundingMode.HALF_UP);
     }
 }

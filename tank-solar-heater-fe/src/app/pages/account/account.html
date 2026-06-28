@@ -1,7 +1,7 @@
 <section class="acc-hero">
   <div class="container">
-    <span class="eyebrow eyebrow--light">My account</span>
-    <h1>Hello, {{ profile()?.name || 'there' }}</h1>
+    <span class="eyebrow eyebrow--light">Tài khoản</span>
+    <h1>Xin chào, {{ profile()?.name || 'bạn' }}</h1>
   </div>
 </section>
 
@@ -9,40 +9,40 @@
   <div class="container">
 
     @if (loading()) {
-      <div class="acc-loading">Loading your account…</div>
+      <div class="acc-loading">Đang tải tài khoản…</div>
     } @else if (error()) {
       <div class="acc-error">{{ error() }}</div>
     } @else {
 
-      <!-- ===== Profile ===== -->
+      <!-- ===== Hồ sơ ===== -->
       <div class="acc-grid">
         <div class="acc-card acc-profile">
-          <h3 class="acc-block-title">Your details</h3>
+          <h3 class="acc-block-title">Thông tin của bạn</h3>
           @if (profile(); as p) {
             <dl class="acc-info">
-              <div><dt>Name</dt><dd>{{ p.name }}</dd></div>
+              <div><dt>Họ tên</dt><dd>{{ p.name }}</dd></div>
               <div><dt>Email</dt><dd>{{ p.email }}</dd></div>
-              <div><dt>Phone</dt><dd>{{ p.phone || '—' }}</dd></div>
-              <div><dt>Account type</dt><dd class="cap">{{ p.role }}</dd></div>
+              <div><dt>Số điện thoại</dt><dd>{{ p.phone || '—' }}</dd></div>
+              <div><dt>Loại tài khoản</dt><dd>{{ roleLabel(p.role) }}</dd></div>
             </dl>
           }
         </div>
 
         <div class="acc-card acc-stat">
           <span class="acc-stat__num">{{ orderCount() }}</span>
-          <span class="acc-stat__label">{{ orderCount() === 1 ? 'order placed' : 'orders placed' }}</span>
-          <a routerLink="/shop" class="btn btn--dark">Continue shopping</a>
+          <span class="acc-stat__label">đơn hàng đã đặt</span>
+          <a routerLink="/shop" class="btn btn--dark">Tiếp tục mua sắm</a>
         </div>
       </div>
 
-      <!-- ===== Orders ===== -->
-      <h3 class="acc-block-title acc-orders-title">Your orders</h3>
+      <!-- ===== Đơn hàng ===== -->
+      <h3 class="acc-block-title acc-orders-title">Đơn hàng của bạn</h3>
 
       @if (orders().length === 0) {
         <div class="acc-empty">
           <span class="acc-empty__ic">📦</span>
-          <p>You haven't placed any orders yet.</p>
-          <a routerLink="/shop" class="btn btn--primary">Browse heaters</a>
+          <p>Bạn chưa có đơn hàng nào.</p>
+          <a routerLink="/shop" class="btn btn--primary">Xem sản phẩm</a>
         </div>
       } @else {
         <div class="acc-orders">
@@ -50,10 +50,10 @@
             <div class="acc-order">
               <button class="acc-order__head" type="button" (click)="toggle(o.id)">
                 <div class="acc-order__id">
-                  <strong>Order #{{ o.id }}</strong>
+                  <strong>Đơn hàng #{{ o.id }}</strong>
                   <small>{{ o.date }}</small>
                 </div>
-                <span class="acc-badge acc-badge--{{ statusColor(o.status) }}">{{ o.status }}</span>
+                <span class="acc-badge acc-badge--{{ statusColor(o.status) }}">{{ statusLabel(o.status) }}</span>
                 <span class="acc-order__total">{{ o.total | currency: 'VND' : 'symbol' : '1.0-0' }}</span>
                 <span class="material-symbols-outlined acc-order__chev">
                   {{ expanded() === o.id ? 'expand_less' : 'expand_more' }}
@@ -64,23 +64,23 @@
                 <div class="acc-order__body">
                   <div class="acc-order__meta">
                     <div>
-                      <span class="acc-meta-label">Payment</span>
+                      <span class="acc-meta-label">Thanh toán</span>
                       @if (o.paymentMethod) {
-                        <span>{{ o.paymentMethod }}</span>
-                        <span class="acc-badge acc-badge--{{ paymentColor(o.paymentStatus) }}">{{ o.paymentStatus }}</span>
+                        <span>{{ methodLabel(o.paymentMethod) }}</span>
+                        <span class="acc-badge acc-badge--{{ paymentColor(o.paymentStatus) }}">{{ paymentLabel(o.paymentStatus) }}</span>
                       } @else {
                         <span>—</span>
                       }
                     </div>
                     <div>
-                      <span class="acc-meta-label">Delivery to</span>
+                      <span class="acc-meta-label">Giao đến</span>
                       <span>{{ o.address || '—' }}</span>
                     </div>
                   </div>
 
                   <table class="acc-items">
                     <thead>
-                      <tr><th>Product</th><th class="c">Qty</th><th class="r">Unit price</th></tr>
+                      <tr><th>Sản phẩm</th><th class="c">SL</th><th class="r">Đơn giá</th></tr>
                     </thead>
                     <tbody>
                       @for (it of o.items; track it.productId) {

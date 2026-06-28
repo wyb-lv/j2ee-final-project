@@ -8,16 +8,16 @@
     </a>
 
     <nav class="site-nav" [class.is-open]="menuOpen()">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Home</a>
-      <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">About Us</a>
-      <a routerLink="/shop" routerLinkActive="active" (click)="closeMenu()">Shopping</a>
-      <a routerLink="/faq" routerLinkActive="active" (click)="closeMenu()">FAQ</a>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Trang chủ</a>
+      <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">Giới thiệu</a>
+      <a routerLink="/shop" routerLinkActive="active" (click)="closeMenu()">Cửa hàng</a>
+      <a routerLink="/faq" routerLinkActive="active" (click)="closeMenu()">Hỏi đáp</a>
     </nav>
 
     <div class="site-header__actions">
       @if (auth.isLoggedIn(); as loggedIn) {
         <div class="user-menu">
-          <button class="user-btn" type="button" (click)="toggleUserMenu()" aria-label="Account menu">
+          <button class="user-btn" type="button" (click)="toggleUserMenu()" aria-label="Menu tài khoản">
             <span class="user-btn__avatar">{{ auth.user()?.name?.charAt(0) }}</span>
             <span class="user-btn__name">{{ auth.user()?.name }}</span>
           </button>
@@ -28,19 +28,19 @@
                 <small>{{ auth.user()?.email }}</small>
               </div>
               @if (auth.user()?.role?.toLowerCase() === 'admin') {
-                <a routerLink="/admin" class="user-dropdown__item" (click)="closeUserMenu()">Admin dashboard</a>
+                <a routerLink="/admin" class="user-dropdown__item" (click)="closeUserMenu()">Trang quản trị</a>
               } @else {
-                <a routerLink="/account" class="user-dropdown__item" (click)="closeUserMenu()">My account</a>
+                <a routerLink="/account" class="user-dropdown__item" (click)="closeUserMenu()">Tài khoản</a>
               }
-              <button type="button" class="user-dropdown__item" (click)="logout()">Log out</button>
+              <button type="button" class="user-dropdown__item" (click)="logout()">Đăng xuất</button>
             </div>
           }
         </div>
       } @else {
-        <a routerLink="/login" class="login-link">Log in</a>
+        <a routerLink="/login" class="login-link">Đăng nhập</a>
       }
 
-      <button class="cart-btn" type="button" (click)="cart.openCart()" aria-label="Open cart">
+      <button class="cart-btn" type="button" (click)="cart.openCart()" aria-label="Mở giỏ hàng">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M3 4h2l2.4 12.3a1 1 0 0 0 1 .7h8.2a1 1 0 0 0 1-.8L20.5 8H6.2"
             stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
@@ -52,7 +52,7 @@
         }
       </button>
 
-      <button class="nav-toggle" type="button" (click)="toggleMenu()" aria-label="Toggle menu">
+      <button class="nav-toggle" type="button" (click)="toggleMenu()" aria-label="Bật/tắt menu">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -70,17 +70,17 @@
 @if (cart.open()) {
   <div class="cart-overlay" (click)="cart.closeCart()"></div>
 }
-<aside class="cart-drawer" [class.is-open]="cart.open()" aria-label="Shopping cart">
+<aside class="cart-drawer" [class.is-open]="cart.open()" aria-label="Giỏ hàng">
   <div class="cart-drawer__head">
-    <h3>Your cart ({{ cart.count() }})</h3>
-    <button class="cart-drawer__close" type="button" (click)="cart.closeCart()" aria-label="Close cart">×</button>
+    <h3>Giỏ hàng của bạn ({{ cart.count() }})</h3>
+    <button class="cart-drawer__close" type="button" (click)="cart.closeCart()" aria-label="Đóng giỏ hàng">×</button>
   </div>
 
   @if (cart.lines().length === 0) {
     <div class="cart-empty">
       <span class="cart-empty__ic">🛒</span>
-      <p>Your cart is empty.</p>
-      <a routerLink="/shop" class="btn btn--dark" (click)="cart.closeCart()">Browse heaters</a>
+      <p>Giỏ hàng của bạn đang trống.</p>
+      <a routerLink="/shop" class="btn btn--dark" (click)="cart.closeCart()">Xem sản phẩm</a>
     </div>
   } @else {
     <div class="cart-list">
@@ -91,27 +91,27 @@
             <span class="cart-line__name">{{ line.name }}</span>
             <span class="cart-line__price">{{ line.lineTotal | currency: 'VND' : 'symbol' : '1.0-0' }}</span>
             <div class="cart-line__qty">
-              <button type="button" (click)="cart.setQty(line.productId, line.quantity - 1)" aria-label="Decrease">−</button>
+              <button type="button" (click)="cart.setQty(line.productId, line.quantity - 1)" aria-label="Giảm">−</button>
               <span>{{ line.quantity }}</span>
-              <button type="button" (click)="cart.setQty(line.productId, line.quantity + 1)" aria-label="Increase">+</button>
+              <button type="button" (click)="cart.setQty(line.productId, line.quantity + 1)" aria-label="Tăng">+</button>
             </div>
           </div>
-          <button class="cart-line__remove" type="button" (click)="cart.remove(line.productId)" aria-label="Remove">🗑</button>
+          <button class="cart-line__remove" type="button" (click)="cart.remove(line.productId)" aria-label="Xóa">🗑</button>
         </div>
       }
     </div>
 
     <div class="cart-drawer__foot">
       <div class="cart-total">
-        <span>Total</span>
+        <span>Tổng cộng</span>
         <strong>{{ cart.total() | currency: 'VND' : 'symbol' : '1.0-0' }}</strong>
       </div>
       @switch (cart.pricingState()) {
-        @case ('loading') { <p class="cart-pricing">Updating…</p> }
-        @case ('error') { <p class="cart-pricing cart-pricing--warn">Cart unavailable — is the server running?</p> }
+        @case ('loading') { <p class="cart-pricing">Đang cập nhật…</p> }
+        @case ('error') { <p class="cart-pricing cart-pricing--warn">Không thể tải giỏ hàng — máy chủ có đang chạy không?</p> }
       }
-      <a routerLink="/checkout" class="btn btn--primary cart-checkout" (click)="cart.closeCart()">Checkout</a>
-      <button class="cart-clear" type="button" (click)="cart.clear()">Clear cart</button>
+      <a routerLink="/checkout" class="btn btn--primary cart-checkout" (click)="cart.closeCart()">Thanh toán</a>
+      <button class="cart-clear" type="button" (click)="cart.clear()">Xóa giỏ hàng</button>
     </div>
   }
 </aside>
@@ -124,35 +124,35 @@
         <span class="brand__mark">☀</span>
         <span class="brand__name">Sun<span>Tank</span></span>
       </a>
-      <p>Energy-smart tank water heaters and solar heating systems. Endless hot water, lower bills, a lighter footprint.</p>
+      <p>Máy nước nóng bình chứa tiết kiệm năng lượng và hệ thống sưởi bằng năng lượng mặt trời. Nước nóng vô tận, hóa đơn thấp hơn, dấu chân môi trường nhẹ hơn.</p>
     </div>
 
     <div class="site-footer__col">
-      <h4>Explore</h4>
-      <a routerLink="/">Home</a>
-      <a routerLink="/about">About Us</a>
-      <a routerLink="/shop">Shopping</a>
-      <a routerLink="/faq">FAQ</a>
+      <h4>Khám phá</h4>
+      <a routerLink="/">Trang chủ</a>
+      <a routerLink="/about">Giới thiệu</a>
+      <a routerLink="/shop">Cửa hàng</a>
+      <a routerLink="/faq">Hỏi đáp</a>
     </div>
 
     <div class="site-footer__col">
-      <h4>Products</h4>
-      <a routerLink="/shop">Solar Water Heaters</a>
-      <a routerLink="/shop">Storage Tank Heaters</a>
-      <a routerLink="/shop">Heat Pump Heaters</a>
-      <a routerLink="/shop">Accessories</a>
+      <h4>Sản phẩm</h4>
+      <a routerLink="/shop">Máy nước nóng năng lượng mặt trời</a>
+      <a routerLink="/shop">Máy nước nóng bình chứa</a>
+      <a routerLink="/shop">Máy nước nóng bơm nhiệt</a>
+      <a routerLink="/shop">Phụ kiện</a>
     </div>
 
     <div class="site-footer__col">
-      <h4>Contact</h4>
+      <h4>Liên hệ</h4>
       <a href="tel:+18005550199">+1 (800) 555-0199</a>
       <a href="mailto:hello@suntank.example">hello&#64;suntank.example</a>
-      <span>Mon–Sat, 8am–6pm</span>
+      <span>Thứ Hai–Thứ Bảy, 8h–18h</span>
     </div>
   </div>
   <div class="container site-footer__bottom">
-    <span>© {{ year }} SunTank Heating Co. All rights reserved.</span>
-    <span>Solar &amp; tank water heating, done right.</span>
+    <span>© {{ year }} SunTank Heating Co. Bảo lưu mọi quyền.</span>
+    <span>Sưởi nước bằng năng lượng mặt trời &amp; bình chứa, làm đúng cách.</span>
   </div>
 </footer>
 }

@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Category, Page, Product } from '../models/catalog.models';
-import { OrderResponse, OrderStatus } from '../models/checkout.models';
+import { OrderResponse, OrderStatus, PaymentResponse } from '../models/checkout.models';
 import { Brand, BrandRequest, CategoryRequest, DashboardStats, ProductRequest } from './admin.models';
 
 export interface ProductQuery {
@@ -86,5 +86,10 @@ export class AdminService {
   updateOrderStatus(orderId: number, status: OrderStatus): Observable<OrderResponse> {
     const params = new HttpParams().set('status', status);
     return this.http.put<OrderResponse>(`${this.base}/orders/${orderId}/status`, null, { params });
+  }
+
+  // ----- Payments -----
+  updatePaymentStatus(paymentId: number, status: string): Observable<PaymentResponse> {
+    return this.http.put<PaymentResponse>(`${this.base}/payments/${paymentId}/status`, { status });
   }
 }

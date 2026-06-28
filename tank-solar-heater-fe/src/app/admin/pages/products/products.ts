@@ -61,8 +61,15 @@ export class AdminProducts implements OnInit {
       });
   }
 
+  /** Up to 3 page numbers, sliding so the current page sits in the middle when possible. */
   pageNumbers(): number[] {
-    return Array.from({ length: this.totalPages() }, (_, i) => i + 1);
+    const total = this.totalPages();
+    const windowSize = 3;
+    if (total <= windowSize) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+    const start = Math.min(Math.max(this.page() - 1, 1), total - windowSize + 1);
+    return Array.from({ length: windowSize }, (_, i) => start + i);
   }
   applyFilters(): void { this.page.set(1); this.load(); }
   onCategory(id: number | null): void { this.categoryId.set(id); this.applyFilters(); }

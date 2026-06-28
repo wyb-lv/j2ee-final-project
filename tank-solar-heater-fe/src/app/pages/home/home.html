@@ -3,20 +3,20 @@
   <div class="hero__bg"></div>
   <div class="hero__overlay"></div>
   <div class="container hero__content">
-    <span class="hero__tag fade-up">Solar &amp; Tank Water Heating</span>
-    <h1 class="hero__title fade-up">Endless Hot Water,<br /><em>Powered by the Sun</em></h1>
+    <span class="hero__tag fade-up">Máy nước nóng năng lượng mặt trời &amp; bình chứa</span>
+    <h1 class="hero__title fade-up">Nước nóng bất tận,<br /><em>Năng lượng từ mặt trời</em></h1>
     <p class="hero__sub fade-up">
-      High-efficiency solar collectors and smart storage tanks that deliver hot water on demand —
-      while cutting your energy bill and your carbon footprint.
+      Bộ thu năng lượng mặt trời hiệu suất cao và bình chứa thông minh cung cấp nước nóng mọi lúc —
+      đồng thời cắt giảm hóa đơn năng lượng và lượng khí thải carbon của bạn.
     </p>
     <div class="hero__btns fade-up">
-      <a routerLink="/shop" class="btn btn--primary">Shop Heaters</a>
-      <a routerLink="/about" class="btn btn--light">Why SunTank</a>
+      <a routerLink="/shop" class="btn btn--primary">Mua ngay máy nước nóng</a>
+      <a routerLink="/about" class="btn btn--light">Vì sao chọn SunTank</a>
     </div>
     <div class="hero__stats fade-up">
-      <div><strong>70%</strong><span>Lower energy bills</span></div>
-      <div><strong>12k+</strong><span>Homes heated</span></div>
-      <div><strong>10yr</strong><span>Warranty</span></div>
+      <div><strong>70%</strong><span>Hóa đơn năng lượng thấp hơn</span></div>
+      <div><strong>12k+</strong><span>Ngôi nhà đã lắp đặt</span></div>
+      <div><strong>10 năm</strong><span>Bảo hành</span></div>
     </div>
   </div>
 </section>
@@ -40,9 +40,9 @@
 <section class="section">
   <div class="container">
     <div class="section__head">
-      <span class="eyebrow">Best Sellers</span>
-      <h2>Heaters our customers love</h2>
-      <p>Hand-picked solar and tank systems, pulled live from our catalog.</p>
+      <span class="eyebrow">Bán chạy nhất</span>
+      <h2>Máy nước nóng được khách hàng yêu thích</h2>
+      <p>Các hệ thống năng lượng mặt trời và bình chứa được tuyển chọn, lấy trực tiếp từ danh mục của chúng tôi.</p>
     </div>
 
     @if (loading()) {
@@ -53,13 +53,13 @@
       </div>
     } @else if (failed()) {
       <div class="notice">
-        <strong>Couldn't reach the catalog service.</strong>
-        <p>Make sure the backend (tank-solar-heater-be) is running on <code>localhost:8080</code>.</p>
+        <strong>Không thể kết nối tới dịch vụ danh mục.</strong>
+        <p>Hãy đảm bảo backend (tank-solar-heater-be) đang chạy trên <code>localhost:8080</code>.</p>
       </div>
     } @else if (featured().length === 0) {
       <div class="notice">
-        <strong>No products yet.</strong>
-        <p>Add some products in the backend and they'll appear here automatically.</p>
+        <strong>Chưa có sản phẩm nào.</strong>
+        <p>Hãy thêm sản phẩm ở backend và chúng sẽ tự động xuất hiện ở đây.</p>
       </div>
     } @else {
       <div class="grid">
@@ -70,7 +70,7 @@
     }
 
     <div class="section__cta">
-      <a routerLink="/shop" class="btn btn--ghost">View all products</a>
+      <a routerLink="/shop" class="btn btn--ghost">Xem tất cả sản phẩm</a>
     </div>
   </div>
 </section>
@@ -79,35 +79,35 @@
 <section class="section section--alt">
   <div class="container compare">
     <div class="compare__copy">
-      <span class="eyebrow">Two ways to heat</span>
-      <h2>Solar collectors or storage tanks — or both</h2>
+      <span class="eyebrow">Hai cách làm nóng nước</span>
+      <h2>Bộ thu năng lượng mặt trời hoặc bình chứa — hoặc cả hai</h2>
       <p>
-        Not sure which system fits your home? We build both, and a hybrid that pairs a solar
-        collector with a smart storage tank for hot water around the clock.
+        Chưa chắc hệ thống nào phù hợp với ngôi nhà của bạn? Chúng tôi sản xuất cả hai, và cả hệ thống
+        lai kết hợp bộ thu năng lượng mặt trời với bình chứa thông minh để có nước nóng suốt cả ngày.
       </p>
       <ul class="ticks">
-        <li>Roof-mounted evacuated-tube &amp; flat-plate solar collectors</li>
-        <li>Insulated stainless storage tanks, 100L–500L</li>
-        <li>Heat-pump hybrids for cloudy climates</li>
-        <li>Smart controllers with app monitoring</li>
+        <li>Bộ thu năng lượng mặt trời ống chân không &amp; tấm phẳng lắp trên mái</li>
+        <li>Bình chứa thép không gỉ cách nhiệt, 100L–500L</li>
+        <li>Hệ thống lai bơm nhiệt cho vùng khí hậu nhiều mây</li>
+        <li>Bộ điều khiển thông minh giám sát qua ứng dụng</li>
       </ul>
-      <a routerLink="/shop" class="btn btn--dark">Explore systems</a>
+      <a routerLink="/shop" class="btn btn--dark">Khám phá hệ thống</a>
     </div>
     <div class="compare__cards">
       <div class="mini">
         <span class="mini__ic">☀</span>
-        <h3>Solar Water Heaters</h3>
-        <p>Free energy from the sun. Lowest running cost, best for sunny regions.</p>
+        <h3>Máy nước nóng năng lượng mặt trời</h3>
+        <p>Năng lượng miễn phí từ mặt trời. Chi phí vận hành thấp nhất, phù hợp nhất cho vùng nhiều nắng.</p>
       </div>
       <div class="mini">
         <span class="mini__ic">🛢</span>
-        <h3>Storage Tank Heaters</h3>
-        <p>Reliable, high-capacity hot water on demand for the whole household.</p>
+        <h3>Máy nước nóng bình chứa</h3>
+        <p>Nước nóng đáng tin cậy, dung lượng lớn theo nhu cầu cho cả gia đình.</p>
       </div>
       <div class="mini">
         <span class="mini__ic">♻</span>
-        <h3>Heat-Pump Hybrids</h3>
-        <p>Up to 4× more efficient than electric, even on cloudy days.</p>
+        <h3>Hệ thống lai bơm nhiệt</h3>
+        <p>Hiệu suất cao gấp 4 lần so với điện, ngay cả trong những ngày nhiều mây.</p>
       </div>
     </div>
   </div>
@@ -117,8 +117,8 @@
 <section class="section">
   <div class="container">
     <div class="section__head">
-      <span class="eyebrow">How it works</span>
-      <h2>Hot water in three simple steps</h2>
+      <span class="eyebrow">Cách hoạt động</span>
+      <h2>Nước nóng chỉ với ba bước đơn giản</h2>
     </div>
     <div class="steps">
       @for (s of steps; track s.n) {
@@ -136,9 +136,9 @@
 <section class="cta">
   <div class="container cta__inner">
     <div>
-      <h2>Ready to stop paying for cold mornings?</h2>
-      <p>Get a system sized for your home, installed by certified technicians.</p>
+      <h2>Sẵn sàng chấm dứt những buổi sáng lạnh giá?</h2>
+      <p>Nhận hệ thống được thiết kế phù hợp với ngôi nhà của bạn, lắp đặt bởi kỹ thuật viên được chứng nhận.</p>
     </div>
-    <a routerLink="/shop" class="btn btn--primary">Shop Now</a>
+    <a routerLink="/shop" class="btn btn--primary">Mua ngay</a>
   </div>
 </section>

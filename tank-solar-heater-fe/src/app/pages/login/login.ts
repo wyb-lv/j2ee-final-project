@@ -31,7 +31,7 @@ export class Login {
   submit(valid: boolean): void {
     this.error.set(null);
     if (!valid) {
-      this.error.set('Please enter your email and password.');
+      this.error.set('Vui lòng nhập email và mật khẩu.');
       return;
     }
     this.submitting.set(true);
@@ -46,8 +46,8 @@ export class Login {
         this.submitting.set(false);
         this.error.set(
           err?.status === 0
-            ? "Couldn't reach the server. Is the backend running on localhost:8080?"
-            : 'Invalid email or password.'
+            ? 'Không thể kết nối đến máy chủ. Backend có đang chạy trên localhost:8080 không?'
+            : 'Email hoặc mật khẩu không đúng.'
         );
       },
     });

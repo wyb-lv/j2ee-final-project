@@ -7,11 +7,6 @@ import { CartPricing } from '../models/cart.models';
 
 export type PricingState = 'idle' | 'loading' | 'ok' | 'error';
 
-export function priceAfterDiscount(p: Product): number {
-  const discount = Number(p.discount ?? 0);
-  return Number(p.price) * (1 - discount / 100);
-}
-
 /**
  * Shopping cart stored in the backend HTTP session. This service is a thin
  * client: every mutation hits /api/cart (with credentials so the JSESSIONID
