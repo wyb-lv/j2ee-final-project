@@ -1,11 +1,11 @@
 package com.example.tanksolarheaterbe.controllers;
 
-import com.example.tanksolarheaterbe.config.AppConfig;
 import com.example.tanksolarheaterbe.dto.ProductRequest;
 import com.example.tanksolarheaterbe.dto.ProductResponse;
 import com.example.tanksolarheaterbe.services.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +23,10 @@ import java.util.Map;
 public class ProductController {
 
     private final ProductService productService;
+
+    /** Products per page; configurable via {@code app.page-size} in application.properties. */
+    @Value("${app.page-size}")
+    private int pageSize;
 
     @GetMapping
     public ResponseEntity<Page<ProductResponse>> getProducts(
@@ -66,7 +70,7 @@ public class ProductController {
     }
 
     private Pageable pageRequest(int page, Pageable pageable) {
-        return PageRequest.of(page - 1, AppConfig.PAGE_SIZE, pageable.getSort());
+        return PageRequest.of(page - 1, pageSize, pageable.getSort());
     }
 
     @GetMapping("/{id}")

@@ -23,11 +23,7 @@ public class JwtService {
         this.jwtEncoder = jwtEncoder;
     }
 
-    /**
-     * @param email subject of the token
-     * @param role  account role (e.g. "admin"); stored as the {@code role} claim
-     *              and later mapped to a {@code ROLE_*} authority.
-     */
+
     public String generateToken(String email, String role) {
 
         Instant now = Instant.now();
