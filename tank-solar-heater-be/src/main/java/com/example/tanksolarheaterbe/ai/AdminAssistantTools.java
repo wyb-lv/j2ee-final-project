@@ -193,6 +193,51 @@ public class AdminAssistantTools {
                 "SELECT status, COUNT(*) AS count FROM \"OrderHeader\" GROUP BY status");
     }
 
+    /** Counts ALL orders (any status), counted by order date. Append a date filter on oh.date. */
+    private static final String ORDER_COUNT_BASE = "SELECT COUNT(*) FROM \"OrderHeader\" oh";
+
+    @Tool(description = """
+            Total number of orders across ALL time (every status). Use for 'tổng số đơn hàng',
+            'how many orders'.""")
+    public String getTotalOrderCount() {
+        return countResult("orderCountTotal", ORDER_COUNT_BASE);
+    }
+
+    @Tool(description = """
+            Number of orders placed in the CURRENT month (computed on the server). Use for
+            'số đơn hàng tháng này', 'orders this month'.""")
+    public String getOrderCountThisMonth() {
+        return countResult("orderCountThisMonth",
+                ORDER_COUNT_BASE + " WHERE YEAR(oh.date) = YEAR(GETDATE()) "
+                        + "AND MONTH(oh.date) = MONTH(GETDATE())");
+    }
+
+    @Tool(description = """
+            Number of orders placed TODAY (computed on the server). Use for 'số đơn hàng hôm nay',
+            'orders today'.""")
+    public String getOrderCountToday() {
+        return countResult("orderCountToday",
+                ORDER_COUNT_BASE + " WHERE oh.date = CAST(GETDATE() AS DATE)");
+    }
+
+    @Tool(description = """
+            Number of orders placed in the CURRENT year (computed on the server). Use for
+            'số đơn hàng năm nay', 'orders this year'.""")
+    public String getOrderCountThisYear() {
+        return countResult("orderCountThisYear",
+                ORDER_COUNT_BASE + " WHERE YEAR(oh.date) = YEAR(GETDATE())");
+    }
+
+    @Tool(description = """
+            Number of orders placed in ONE specific, explicitly-named month. Use only when the user
+            names a month/year; for 'this month' use getOrderCountThisMonth.""")
+    public String getOrderCountByMonth(
+            @ToolParam(description = "4-digit year, e.g. 2026") int year,
+            @ToolParam(description = "month number, 1-12") int month) {
+        return countResult("orderCountByMonth",
+                ORDER_COUNT_BASE + " WHERE YEAR(oh.date) = ? AND MONTH(oh.date) = ?", year, month);
+    }
+
     @Tool(description = """
             Best-selling products ranked by units sold, with revenue per product. Use for
             'top products', 'best sellers', 'sản phẩm bán chạy'.""")
@@ -239,6 +284,20 @@ public class AdminAssistantTools {
             log.info("AI tool [{}] -> {}", label, revenue);
             return "Doanh thu (tổng giá trị các đơn hàng chưa huỷ) = "
                     + revenue.toPlainString() + " VND";
+        } catch (Exception e) {
+            log.warn("AI tool [{}] failed: {}", label, e.getMessage());
+            return "Query failed: " + e.getMessage();
+        }
+    }
+
+    /** Runs a COUNT(*) query and returns ONE clearly-labelled number. */
+    private String countResult(String label, String sql, Object... args) {
+        log.info("AI tool [{}]: {}", label, sql);
+        try {
+            Long count = jdbc.queryForObject(sql, Long.class, args);
+            long n = count != null ? count : 0L;
+            log.info("AI tool [{}] -> {}", label, n);
+            return "Số đơn hàng = " + n;
         } catch (Exception e) {
             log.warn("AI tool [{}] failed: {}", label, e.getMessage());
             return "Query failed: " + e.getMessage();

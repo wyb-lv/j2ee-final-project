@@ -18,6 +18,6 @@ public class UserRequest {
     @NotBlank
     private String password;
 
-    @Pattern(regexp = "\\d{10,11}", message = "Phone must be 10-11 digits")
+    @Pattern(regexp = "\\d{10}", message = "Phone must be 10 digits")
     private String phone;
 }
