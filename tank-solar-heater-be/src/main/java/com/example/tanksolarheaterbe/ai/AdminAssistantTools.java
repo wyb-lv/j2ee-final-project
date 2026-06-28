@@ -109,6 +109,29 @@ public class AdminAssistantTools {
                     + "WHERE oh.status <> 'CANCELLED'";
 
     @Tool(description = """
+            Returns the current SERVER date and time: the full date plus day, month, year as numbers,
+            and the weekday. Call this whenever the question involves 'today' / 'hôm nay',
+            'this month' / 'tháng này', 'this year' / 'năm nay', or any relative date, so you use the
+            correct day/month/year instead of guessing.""")
+    public String getCurrentDate() {
+        log.info("AI tool [currentDate]");
+        try {
+            Map<String, Object> r = jdbc.queryForMap(
+                    "SELECT CONVERT(varchar(10), GETDATE(), 23) AS today, "
+                            + "DAY(GETDATE()) AS day, MONTH(GETDATE()) AS month, "
+                            + "YEAR(GETDATE()) AS year, DATENAME(weekday, GETDATE()) AS weekday");
+            String result = "today=" + r.get("today") + " | day=" + r.get("day")
+                    + " | month=" + r.get("month") + " | year=" + r.get("year")
+                    + " | weekday=" + r.get("weekday");
+            log.info("AI tool [currentDate] -> {}", result);
+            return result;
+        } catch (Exception e) {
+            log.warn("AI tool [currentDate] failed: {}", e.getMessage());
+            return "Query failed: " + e.getMessage();
+        }
+    }
+
+    @Tool(description = """
             Total revenue across ALL time. Matches the dashboard: total value of every non-cancelled
             order. Use for general revenue questions ('total revenue', 'doanh thu', 'tổng doanh thu').
             Not filtered by date.""")

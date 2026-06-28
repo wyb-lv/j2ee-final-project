@@ -1,6 +1,11 @@
 package com.example.tanksolarheaterbe.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -17,22 +22,30 @@ public class Account {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @NotBlank
+    @Email
     @Column(name = "email", nullable = false, length = 100)
     private String email;
 
+    @NotBlank
     @Column(name = "password", nullable = false, length = 64)
     private String password;
 
+    @NotBlank
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
+    @Size(max = 20)
     @Column(name = "phone", length = 20)
     private String phone;
 
+    @NotBlank
+    @Pattern(regexp = "(?i)(admin|customer)", message = "Role must be admin or customer")
     @ColumnDefault("'customer'")
     @Column(name = "role", nullable = false, length = 20)
     private String role;
 
+    @NotNull
     @ColumnDefault("true")
     @Column(name = "enabled", nullable = false)
     private Boolean enabled;

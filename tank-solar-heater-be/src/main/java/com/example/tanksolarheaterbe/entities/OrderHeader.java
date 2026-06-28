@@ -1,6 +1,7 @@
 package com.example.tanksolarheaterbe.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,9 +17,11 @@ public class OrderHeader {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @NotNull
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 50)
     private OrderStatus status;
@@ -26,6 +29,7 @@ public class OrderHeader {
     @Column(name = "address")
     private String address;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "\"customerId\"", nullable = false)
     private Account customer;
