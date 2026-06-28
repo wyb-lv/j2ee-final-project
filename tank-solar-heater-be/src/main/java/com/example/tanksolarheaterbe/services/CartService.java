@@ -60,7 +60,7 @@ public class CartService {
         for (Map.Entry<Integer, Integer> entry : items.entrySet()) {
             Product product = productRepository.findById(entry.getKey()).orElse(null);
             if (product == null) {
-                continue; // product was removed from the catalog; skip it
+                continue;
             }
             int qty = entry.getValue();
 

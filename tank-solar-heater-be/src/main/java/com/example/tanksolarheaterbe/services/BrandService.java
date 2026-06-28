@@ -27,10 +27,6 @@ public class BrandService {
 
     public BrandResponse create(BrandRequest request) {
         Brand brand = new Brand();
-        // Brand has no auto-generated id; assign the next available one.
-        int nextId = brandRepository.findAll().stream()
-                .mapToInt(Brand::getId).max().orElse(0) + 1;
-        brand.setId(nextId);
         brand.setName(request.getName());
         return toResponse(brandRepository.save(brand));
     }

@@ -10,10 +10,6 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-/**
- * Issues access tokens (JWTs). Verification of incoming tokens is handled by Spring
- * Security's resource server (see {@link SecurityConfig}).
- */
 @Service
 public class JwtService {
 
@@ -22,7 +18,6 @@ public class JwtService {
     public JwtService(JwtEncoder jwtEncoder) {
         this.jwtEncoder = jwtEncoder;
     }
-
 
     public String generateToken(String email, String role) {
 

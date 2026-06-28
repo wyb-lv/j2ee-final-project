@@ -120,17 +120,11 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/v3/api-docs.yaml"
                         ).permitAll()
-
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/brands/**").permitAll()
-
-                        // Publicly served uploaded product images.
                         .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
-
                         .requestMatchers("/api/cart", "/api/cart/**").permitAll()
-
-                        // Checkout requires a signed-in customer (no guest accounts).
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth -> oauth
