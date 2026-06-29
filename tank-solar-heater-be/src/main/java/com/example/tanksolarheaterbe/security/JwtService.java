@@ -7,11 +7,14 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 @Service
 public class JwtService {
+
+    /** Access-token lifetime; the Redis session and SID cookie are scoped to the same window. */
+    public static final Duration ACCESS_TTL = Duration.ofMinutes(15);
 
     private final JwtEncoder jwtEncoder;
 
@@ -27,7 +30,7 @@ public class JwtService {
                 .subject(email)
                 .issuedAt(now)
                 // Short-lived: clients renew it via the refresh-token endpoint.
-                .expiresAt(now.plus(15, ChronoUnit.MINUTES))
+                .expiresAt(now.plus(ACCESS_TTL))
                 .claim("role", role.toUpperCase())
                 .build();
 

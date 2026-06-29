@@ -5,7 +5,9 @@ import { Observable, finalize, shareReplay, switchMap, tap, throwError } from 'r
 import { environment } from '../../environments/environment';
 import { AuthUser, LoginRequest, LoginResponse, RegisterRequest, TokenResponse } from './auth.models';
 
-const TOKEN_KEY = 'suntank_token';
+// We persist only the opaque session id (presented as a Bearer token) and refresh token — never
+// the JWT itself, which is held server-side in Redis and resolved from the session id per request.
+const SESSION_KEY = 'suntank_session';
 const REFRESH_KEY = 'suntank_refresh';
 const USER_KEY = 'suntank_user';
 
@@ -30,7 +32,7 @@ export class AuthService {
           role: res.role,
           email: payload.email,
         };
-        this.store(res.token, res.refreshToken, user);
+        this.store(res.sessionId, res.refreshToken, user);
       })
     );
   }
@@ -43,15 +45,14 @@ export class AuthService {
   }
 
   logout(): void {
-    // Invalidate the tokens server-side (best-effort) while the access token is still
-    // attached by the interceptor, then drop the client's copy. The local clear must
-    // stay — the server can't erase the browser's storage.
+    // Invalidate the session + refresh token server-side (best-effort) while the session id is
+    // still attached by the interceptor, then drop the client's copy.
     this.http.post(`${this.base}/auth/logout`, {}).subscribe({ error: () => {} });
     this.clearSession();
   }
 
   /**
-   * Swaps the stored refresh token for a fresh access + refresh pair. Concurrent callers
+   * Swaps the stored refresh token for a fresh session id + refresh token. Concurrent callers
    * share a single request. On failure the caller is responsible for handling the error.
    */
   refresh(): Observable<TokenResponse> {
@@ -65,16 +66,17 @@ export class AuthService {
     this.refresh$ = this.http
       .post<TokenResponse>(`${this.base}/auth/refresh`, { refreshToken })
       .pipe(
-        tap((res) => this.storeTokens(res.token, res.refreshToken)),
+        tap((res) => this.storeTokens(res.sessionId, res.refreshToken)),
         finalize(() => (this.refresh$ = null)),
         shareReplay(1)
       );
     return this.refresh$;
   }
 
-  token(): string | null {
+  /** The opaque session id sent as the Bearer token (resolved to the JWT server-side). */
+  sessionId(): string | null {
     if (!isPlatformBrowser(this.platformId)) return null;
-    return localStorage.getItem(TOKEN_KEY);
+    return localStorage.getItem(SESSION_KEY);
   }
 
   refreshToken(): string | null {
@@ -86,21 +88,21 @@ export class AuthService {
   clearSession(): void {
     this.user.set(null);
     if (!isPlatformBrowser(this.platformId)) return;
-    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(SESSION_KEY);
     localStorage.removeItem(REFRESH_KEY);
     localStorage.removeItem(USER_KEY);
   }
 
-  private store(token: string, refreshToken: string, user: AuthUser): void {
+  private store(sessionId: string, refreshToken: string, user: AuthUser): void {
     this.user.set(user);
     if (!isPlatformBrowser(this.platformId)) return;
     localStorage.setItem(USER_KEY, JSON.stringify(user));
-    this.storeTokens(token, refreshToken);
+    this.storeTokens(sessionId, refreshToken);
   }
 
-  private storeTokens(token: string, refreshToken: string): void {
+  private storeTokens(sessionId: string, refreshToken: string): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    localStorage.setItem(TOKEN_KEY, token);
+    localStorage.setItem(SESSION_KEY, sessionId);
     localStorage.setItem(REFRESH_KEY, refreshToken);
   }
 

@@ -10,9 +10,12 @@ import com.example.tanksolarheaterbe.entities.Account;
 import com.example.tanksolarheaterbe.repositories.AccountRepository;
 import com.example.tanksolarheaterbe.security.JwtService;
 import com.example.tanksolarheaterbe.security.RefreshTokenService;
+import com.example.tanksolarheaterbe.security.SessionStore;
 import com.example.tanksolarheaterbe.services.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,11 +32,14 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class AuthController {
 
+    private static final String BEARER_PREFIX = "Bearer ";
+
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final AccountRepository accountRepository;
     private final AuthService authService;
     private final RefreshTokenService refreshTokenService;
+    private final SessionStore sessionStore;
 
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
@@ -48,11 +54,11 @@ public class AuthController {
         Account account = accountRepository.findByEmail(request.getEmail())
                 .orElseThrow();
 
-        String token = jwtService.generateToken(account.getEmail(), account.getRole());
+        String sessionId = openSession(account);
         String refreshToken = refreshTokenService.issue(account);
 
         return new LoginResponse(
-                token, refreshToken, account.getId(), account.getName(), account.getRole());
+                sessionId, refreshToken, account.getId(), account.getName(), account.getRole());
     }
 
     @PostMapping("/register")
@@ -60,7 +66,7 @@ public class AuthController {
         return authService.register(request);
     }
 
-    /** Exchanges a valid refresh token for a new access token and a rotated refresh token. */
+    /** Exchanges a valid refresh token for a new session id and a rotated refresh token. */
     @PostMapping("/refresh")
     public TokenResponse refresh(@Valid @RequestBody RefreshTokenRequest request) {
 
@@ -71,14 +77,16 @@ public class AuthController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
 
-        String token = jwtService.generateToken(account.getEmail(), account.getRole());
+        String sessionId = openSession(account);
         String rotated = refreshTokenService.issue(account);
 
-        return new TokenResponse(token, rotated);
+        return new TokenResponse(sessionId, rotated);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(Authentication authentication) {
+    public ResponseEntity<Void> logout(Authentication authentication, HttpServletRequest httpRequest) {
+
+        sessionStore.delete(presentedSessionId(httpRequest));
 
         if (authentication != null && authentication.isAuthenticated()) {
             accountRepository.findByEmail(authentication.getName())
@@ -86,5 +94,19 @@ public class AuthController {
         }
 
         return ResponseEntity.noContent().build();
+    }
+
+    /** Mints a JWT for the account and stores it in Redis, returning the opaque session id. */
+    private String openSession(Account account) {
+        String jwt = jwtService.generateToken(account.getEmail(), account.getRole());
+        return sessionStore.create(jwt, JwtService.ACCESS_TTL);
+    }
+
+    /** The opaque session id the caller presented as a Bearer token, or null. */
+    private String presentedSessionId(HttpServletRequest request) {
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        return header != null && header.startsWith(BEARER_PREFIX)
+                ? header.substring(BEARER_PREFIX.length())
+                : null;
     }
 }

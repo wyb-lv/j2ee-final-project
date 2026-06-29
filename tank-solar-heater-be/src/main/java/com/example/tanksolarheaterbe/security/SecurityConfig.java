@@ -99,7 +99,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(
-            HttpSecurity http
+            HttpSecurity http,
+            SessionBearerTokenResolver bearerTokenResolver
     ) throws Exception {
 
         http
@@ -131,6 +132,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth -> oauth
+                        // The Bearer value is an opaque session id; resolve it to the JWT in Redis.
+                        .bearerTokenResolver(bearerTokenResolver)
                         .jwt(jwt -> jwt
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter())
                         )

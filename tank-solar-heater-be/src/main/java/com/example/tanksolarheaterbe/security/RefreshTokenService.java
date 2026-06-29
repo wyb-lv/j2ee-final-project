@@ -19,7 +19,8 @@ import java.util.Base64;
 @RequiredArgsConstructor
 public class RefreshTokenService {
 
-    private static final Duration TTL = Duration.ofDays(7);
+    /** Refresh-token lifetime; the RID cookie is scoped to the same window. */
+    public static final Duration TTL = Duration.ofDays(7);
 
     private final SecureRandom random = new SecureRandom();
     private final Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
