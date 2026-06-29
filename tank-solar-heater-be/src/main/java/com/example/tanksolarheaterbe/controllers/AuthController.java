@@ -12,10 +12,8 @@ import com.example.tanksolarheaterbe.security.JwtService;
 import com.example.tanksolarheaterbe.security.RefreshTokenService;
 import com.example.tanksolarheaterbe.security.SessionStore;
 import com.example.tanksolarheaterbe.services.AuthService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,8 +29,6 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
-
-    private static final String BEARER_PREFIX = "Bearer ";
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
@@ -84,11 +80,11 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(Authentication authentication, HttpServletRequest httpRequest) {
+    public ResponseEntity<Void> logout(Authentication authentication) {
 
-        sessionStore.delete(presentedSessionId(httpRequest));
-
+        // Revoke the account's session (and refresh token) so nothing lingers in the cache.
         if (authentication != null && authentication.isAuthenticated()) {
+            sessionStore.revokeAccount(authentication.getName());
             accountRepository.findByEmail(authentication.getName())
                     .ifPresent(refreshTokenService::revoke);
         }
@@ -96,17 +92,9 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
-    /** Mints a JWT for the account and stores it in Redis, returning the opaque session id. */
+    /** Mints a JWT for the account and stores it in Redis under that account, returning the session id. */
     private String openSession(Account account) {
         String jwt = jwtService.generateToken(account.getEmail(), account.getRole());
-        return sessionStore.create(jwt, JwtService.ACCESS_TTL);
-    }
-
-    /** The opaque session id the caller presented as a Bearer token, or null. */
-    private String presentedSessionId(HttpServletRequest request) {
-        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        return header != null && header.startsWith(BEARER_PREFIX)
-                ? header.substring(BEARER_PREFIX.length())
-                : null;
+        return sessionStore.create(account.getEmail(), jwt, JwtService.ACCESS_TTL);
     }
 }
