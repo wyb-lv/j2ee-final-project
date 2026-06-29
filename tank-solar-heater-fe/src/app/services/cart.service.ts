@@ -50,10 +50,8 @@ export class CartService {
     this.http
       .post<CartPricing>(`${this.base}/cart/items`, { productId: product.id, quantity: qty }, this.opts)
       .subscribe({
-        next: (c) => {
-          this.apply(c);
-          this.open.set(true);
-        },
+        // Update the cart silently; the panel only opens when the user clicks the cart icon.
+        next: (c) => this.apply(c),
         error: () => this.pricingState.set('error'),
       });
   }
