@@ -6,12 +6,6 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenResolv
 import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.stereotype.Component;
 
-/**
- * Treats the {@code Authorization: Bearer} value as an opaque session id and swaps it for the
- * access JWT held in Redis, so the existing signature/expiry validation runs unchanged. If the
- * presented value is not a known session (e.g. a raw JWT pasted into Swagger), it is passed
- * through as-is.
- */
 @Component
 @RequiredArgsConstructor
 public class SessionBearerTokenResolver implements BearerTokenResolver {
